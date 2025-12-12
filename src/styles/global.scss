@@ -1,0 +1,205 @@
+@import './variables.scss';
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: $font-family;
+    font-size: $font-size-base;
+    line-height: 1.6;
+    color: $text-primary;
+    background-color: $background;
+}
+
+// Typography
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    line-height: 1.2;
+    color: $text-primary;
+}
+
+h1 {
+    font-size: $font-size-4xl;
+    margin-bottom: $spacing-xl;
+}
+
+h2 {
+    font-size: $font-size-3xl;
+    margin-bottom: $spacing-lg;
+}
+
+h3 {
+    font-size: $font-size-2xl;
+    margin-bottom: $spacing-md;
+}
+
+p {
+    margin-bottom: $spacing-md;
+}
+
+// Form Elements with Accessibility
+input,
+select,
+textarea,
+button {
+    font-family: inherit;
+    font-size: inherit;
+}
+
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='number'],
+textarea,
+select {
+    padding: $spacing-sm $spacing-md;
+    font-size: $font-size-base;
+    border: 2px solid $border-color;
+    border-radius: $radius-md;
+    background-color: white;
+    color: $text-primary;
+    transition: border-color $transition-normal, box-shadow $transition-normal;
+
+    &:hover {
+        border-color: $pokemon-gray;
+    }
+
+    &:focus {
+        outline: none;
+        border-color: $secondary;
+        box-shadow: 0 0 0 $focus-outline-offset $pokemon-blue;
+    }
+
+    &:disabled {
+        background-color: #f0f0f0;
+        color: $text-secondary;
+        cursor: not-allowed;
+    }
+}
+
+button:not(.skip-to-content) {
+    padding: $spacing-sm $spacing-lg;
+    font-size: $font-size-base;
+    font-weight: 600;
+    border: none;
+    border-radius: $radius-md;
+    cursor: pointer;
+    background-color: $primary;
+    color: white;
+    transition: background-color $transition-normal, transform $transition-fast, box-shadow $transition-normal;
+    box-shadow: $shadow-md;
+    min-height: 44px; // WCAG Touch Target Size
+
+    &:hover:not(:disabled) {
+        background-color: $hover-primary;
+        transform: translateY(-2px);
+        box-shadow: $shadow-lg;
+    }
+
+    &:active:not(:disabled) {
+        transform: translateY(0);
+    }
+
+    &:focus {
+        outline: $focus-outline;
+        outline-offset: $focus-outline-offset;
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+// Links
+a {
+    color: $secondary;
+    text-decoration: none;
+    transition: color $transition-normal;
+
+    &:hover {
+        color: $hover-secondary;
+        text-decoration: underline;
+    }
+
+    &:focus {
+        outline: $focus-outline;
+        outline-offset: $focus-outline-offset;
+        border-radius: $radius-sm;
+    }
+}
+
+// Utility Classes
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 $spacing-md;
+}
+/* NOTE: the following global utility classes were removed in branch chore/remove-unused-css:
+   - .text-center
+   - .text-primary
+   - .text-secondary
+   - .bg-primary
+   - .bg-secondary
+   - .bg-accent
+   Rationale: these selectors were not referenced anywhere in `src/` (grep-based scan). If you need them restored,
+   revert this commit or re-add them in the PR discussion.
+*/
+
+// Skip to content link (Accessibility)
+.skip-to-content {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+    background: $primary;
+    color: white;
+    padding: $spacing-md;
+    z-index: 100;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: $radius-md;
+    transition: top $transition-normal, left $transition-normal;
+
+    &:focus {
+        top: $spacing-md;
+        left: $spacing-md;
+        outline: $focus-outline;
+        outline-offset: $focus-outline-offset;
+    }
+}
+
+// Screen Reader Only (Accessibility)
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+// Reduced Motion Support (Accessibility)
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+
+
