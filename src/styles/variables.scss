@@ -1,0 +1,65 @@
+// Pokemon Color Palette
+$pokemon-red: #ee1515;
+$pokemon-blue: #3b4cda;
+$pokemon-yellow: #ffce4b;
+$pokemon-white: #f5f5f5;
+$pokemon-black: #1a1a1a;
+$pokemon-gray: #595959;
+$pokemon-gold: #daa520;
+
+// Semantic Colors
+$primary: $pokemon-red;
+$secondary: $pokemon-blue;
+$accent: $pokemon-yellow;
+$background: $pokemon-white;
+$text-primary: $pokemon-black;
+$text-secondary: $pokemon-gray;
+$border-color: #707070;
+$hover-primary: #cc0000;
+$hover-secondary: #2a3ab8;
+
+// Typography
+$font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+$font-size-xs: 0.75rem;
+$font-size-sm: 0.875rem;
+$font-size-base: 1rem;
+$font-size-md: 1.125rem;
+$font-size-lg: 1.25rem;
+$font-size-xl: 1.5rem;
+$font-size-2xl: 2rem;
+$font-size-3xl: 3rem;
+$font-size-4xl: 3.5rem;
+
+// Spacing
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+$spacing-2xl: 3rem;
+
+// Border Radius
+$radius-sm: 0.25rem;
+$radius-md: 0.5rem;
+$radius-lg: 1rem;
+
+// Transitions
+$transition-fast: 0.15s ease;
+$transition-normal: 0.3s ease;
+$transition-slow: 0.5s ease;
+
+// Shadows
+$shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.2);
+
+// Focus Styles (Accessibility)
+$focus-outline: 3px solid $pokemon-blue;
+$focus-outline-offset: 2px;
+
+// Media Queries
+// check
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;

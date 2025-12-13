@@ -143,16 +143,7 @@ a {
     margin: 0 auto;
     padding: 0 $spacing-md;
 }
-/* NOTE: the following global utility classes were removed in branch chore/remove-unused-css:
-   - .text-center
-   - .text-primary
-   - .text-secondary
-   - .bg-primary
-   - .bg-secondary
-   - .bg-accent
-   Rationale: these selectors were not referenced anywhere in `src/` (grep-based scan). If you need them restored,
-   revert this commit or re-add them in the PR discussion.
-*/
+
 
 // Skip to content link (Accessibility)
 .skip-to-content {
