@@ -1,5 +1,5 @@
 <script setup>
-const props = defineProps({
+defineProps({
     isOpen: {
         type: Boolean,
         required: true
@@ -24,21 +24,26 @@ const handleKeyDown = (e) => {
 </script>
 
 <template>
-    <div v-if="isOpen" class="modal-overlay" @click="handleCancel" @keydown="handleKeyDown">
+    <div
+        v-if="isOpen"
+        class="modal-overlay"
+        @click="handleCancel"
+        @keydown="handleKeyDown"
+    >
         <div class="quit-modal" @click.stop>
             <h2>Are you sure?</h2>
             <p>Do you want to quit the game and return to the title screen?</p>
             <div class="modal-actions">
-                <button 
-                    class="btn-yes" 
-                    @click="handleConfirm" 
+                <button
+                    class="btn-yes"
+                    @click="handleConfirm"
                     aria-label="Yes, quit the game"
                 >
                     Yes
                 </button>
-                <button 
-                    class="btn-no" 
-                    @click="handleCancel" 
+                <button
+                    class="btn-no"
+                    @click="handleCancel"
                     aria-label="No, continue playing"
                 >
                     No

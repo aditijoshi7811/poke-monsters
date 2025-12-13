@@ -15,11 +15,11 @@ const { isAnimatingOut, displayPokemon } = usePokemonAnimation(
     400
 );
 
-const pokemon = computed(() => pokemonStore.currentPokemon);
-
 const pokemonTypes = computed(() => {
     if (!displayPokemon.value?.types) return '';
-    return displayPokemon.value.types.map(t => capitalize(t.type.name)).join(', ');
+    return displayPokemon.value.types
+        .map((t) => capitalize(t.type.name))
+        .join(', ');
 });
 
 const encounterStats = computed(() => {
@@ -27,15 +27,24 @@ const encounterStats = computed(() => {
     return [
         { label: 'Name', value: capitalize(displayPokemon.value.name) },
         { label: 'Type', value: pokemonTypes.value },
-        { label: 'Height', value: `${(displayPokemon.value.height / 10).toFixed(1)} m` },
-        { label: 'Weight', value: `${(displayPokemon.value.weight / 10).toFixed(1)} kg` }
+        {
+            label: 'Height',
+            value: `${(displayPokemon.value.height / 10).toFixed(1)} m`
+        },
+        {
+            label: 'Weight',
+            value: `${(displayPokemon.value.weight / 10).toFixed(1)} kg`
+        }
     ];
 });
 </script>
 
 <template>
     <div class="pokemon-display">
-        <div v-if="displayPokemon" :class="['pokemon-container', { 'animate-out': isAnimatingOut }]">
+        <div
+            v-if="displayPokemon"
+            :class="['pokemon-container', { 'animate-out': isAnimatingOut }]"
+        >
             <PokemonImages :pokemon="displayPokemon" />
 
             <EncounterStats :stats="encounterStats" />

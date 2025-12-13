@@ -1,25 +1,29 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { getPokemonListByGeneration, getPokemonById, getGenerations } from '@/services/pokemonService';
+import {
+    getPokemonListByGeneration,
+    getPokemonById,
+    getGenerations
+} from '@/services/pokemonService';
 
 export const usePokemonStore = defineStore('pokemon', () => {
     // Store Pokemon list by generation
     const pokemonListByGeneration = ref({});
-    
+
     // Current Pokemon details
     const currentPokemon = ref(null);
     const isLoading = ref(false);
     const error = ref(null);
-    
+
     // Selected generation
     const selectedGeneration = ref(1);
     // Generations list (from API /generation)
     const generations = ref([]);
     const isLoadingGenerations = ref(false);
-    
+
     // Event log
     const events = ref([]);
-    
+
     // Flag to track if Pokemon is being cleared for animation (Ignore/runaway) vs caught
     const shouldAnimateOut = ref(false);
 
@@ -39,7 +43,7 @@ export const usePokemonStore = defineStore('pokemon', () => {
             const savedGeneration = localStorage.getItem('selectedGeneration');
             genId = savedGeneration ? Number(savedGeneration) : 1;
         }
-        
+
         // Return data if already in store
         if (pokemonListByGeneration.value[genId]) {
             return pokemonListByGeneration.value[genId];
@@ -49,7 +53,7 @@ export const usePokemonStore = defineStore('pokemon', () => {
             isLoading.value = true;
             error.value = null;
             const data = await getPokemonListByGeneration(genId);
-            
+
             // Store in Pinia store
             pokemonListByGeneration.value[genId] = data;
             return data;
@@ -69,7 +73,7 @@ export const usePokemonStore = defineStore('pokemon', () => {
         // Already loaded
         if (generations.value.length > 0) {
             return generations.value;
-        }     
+        }
         try {
             isLoadingGenerations.value = true;
             const data = await getGenerations();
@@ -83,7 +87,6 @@ export const usePokemonStore = defineStore('pokemon', () => {
             isLoadingGenerations.value = false;
         }
     };
-    
 
     /**
      * Fetch and set current Pokemon

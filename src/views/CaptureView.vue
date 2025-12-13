@@ -11,38 +11,40 @@ import CollectionModal from '@/components/CollectionModal.vue';
 import QuitConfirmationModal from '@/components/QuitConfirmationModal.vue';
 import { onMounted } from 'vue';
 
-
 const trainerStore = useTrainerStore();
 const pokemonStore = usePokemonStore();
 const router = useRouter();
 const isCollectionModalOpen = ref(false);
 const showQuitConfirmation = ref(false);
 
-
-
 // Load trainer data from localStorage in case user refreshes the page
 onMounted(async () => {
     trainerStore.loadTrainerName();
     trainerStore.loadCaughtPokemon();
-    
+
     // Restore selectedGeneration from localStorage
     const savedGeneration = localStorage.getItem('selectedGeneration');
     if (savedGeneration) {
         pokemonStore.selectedGeneration = Number(savedGeneration);
     }
-      
+
     // Ensure the generation's pokemon list is preloaded when the user starts the game
     try {
-        await pokemonStore.fetchPokemonListByGeneration(pokemonStore.selectedGeneration);
+        await pokemonStore.fetchPokemonListByGeneration(
+            pokemonStore.selectedGeneration
+        );
     } catch (err) {
         // show error in store so user can see it in event log
         alert('Failed to load Pokémon generation. Please try again.');
         return;
-    } finally {
     }
 });
 
-const { showAnimation: showCatchSuccess, animationData: caughtPokemonName, trigger: triggerSuccess } = useSuccessAnimation(1000);
+const {
+    showAnimation: showCatchSuccess,
+    animationData: caughtPokemonName,
+    trigger: triggerSuccess
+} = useSuccessAnimation(1000);
 
 const openCollectionModal = () => {
     isCollectionModalOpen.value = true;
@@ -80,7 +82,7 @@ const cancelQuit = () => {
         </header>
 
         <section class="capture-content">
-            <GameControls 
+            <GameControls
                 @open-collection="openCollectionModal"
                 @catch-success="handleCatchSuccess"
                 @quit-game="handleQuitClick"
@@ -103,13 +105,16 @@ const cancelQuit = () => {
         </div>
 
         <!-- Quit Confirmation Modal -->
-        <QuitConfirmationModal 
-            :is-open="showQuitConfirmation" 
+        <QuitConfirmationModal
+            :is-open="showQuitConfirmation"
             @confirm="confirmQuit"
             @cancel="cancelQuit"
         />
 
-        <CollectionModal :is-open="isCollectionModalOpen" @close="closeCollectionModal" />
+        <CollectionModal
+            :is-open="isCollectionModalOpen"
+            @close="closeCollectionModal"
+        />
     </main>
 </template>
 
@@ -128,7 +133,7 @@ const cancelQuit = () => {
             font-size: $font-size-2xl;
             margin-bottom: -1rem;
             color: $primary;
-            padding:2rem;
+            padding: 2rem;
             text-align: center;
         }
     }
@@ -147,7 +152,6 @@ const cancelQuit = () => {
     .capture-content {
         margin: $spacing-md !important;
     }
-
 }
 
 .catch-success-overlay {
@@ -165,7 +169,11 @@ const cancelQuit = () => {
 }
 
 .catch-success-animation {
-    background: linear-gradient(135deg, $secondary 0%, darken($secondary, 10%) 100%);
+    background: linear-gradient(
+        135deg,
+        $secondary 0%,
+        darken($secondary, 10%) 100%
+    );
     color: $pokemon-white;
     padding: $spacing-2xl;
     border-radius: $radius-lg;
@@ -259,7 +267,8 @@ const cancelQuit = () => {
 }
 
 @keyframes twinkle {
-    0%, 100% {
+    0%,
+    100% {
         opacity: 1;
         transform: scale(1);
     }
@@ -268,7 +277,6 @@ const cancelQuit = () => {
         transform: scale(0.5);
     }
 }
-
 
 .modal-overlay {
     position: fixed;

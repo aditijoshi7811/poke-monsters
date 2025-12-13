@@ -12,14 +12,22 @@ const trainerStore = useTrainerStore();
 const emit = defineEmits(['open-collection', 'catch-success', 'quit-game']);
 
 // useRandomPokemon composable uses preloaded generation data; call it to select random pokemon
-const { isLoading: fetchLoading, fetchRandomPokemon } = useRandomPokemon(pokemonStore);
-const { failureCount, isLoading: catchLoading, throw: attemptThrow, reset: resetCatch } = usePokemonCatchMechanic(trainerStore, pokemonStore, (e, d) => emit(e, d));
+const { isLoading: fetchLoading, fetchRandomPokemon } =
+    useRandomPokemon(pokemonStore);
+const { throw: attemptThrow, reset: resetCatch } = usePokemonCatchMechanic(
+    trainerStore,
+    pokemonStore,
+    (e, d) => emit(e, d)
+);
 
 const isFindingPokemon = ref(false);
-const hasPokemon = computed(() => !!pokemonStore.currentPokemon && !fetchLoading.value);
+const hasPokemon = computed(
+    () => !!pokemonStore.currentPokemon && !fetchLoading.value
+);
 // Unique Pokemon count and total captures for the trainer
-const uniqueCount = computed(() => new Set(trainerStore.caughtPokemon.map(p => p.name)).size);
-const totalCaptured = computed(() => trainerStore.caughtPokemon.length);
+const uniqueCount = computed(
+    () => new Set(trainerStore.caughtPokemon.map((p) => p.name)).size
+);
 
 const handleFind = async () => {
     isFindingPokemon.value = true;
@@ -33,9 +41,12 @@ const handleFind = async () => {
         if (!pokemonStore.pokemonListByGeneration[genId]) {
             await pokemonStore.fetchPokemonListByGeneration(genId);
         }
-        
-        const pokemon = await fetchRandomPokemon(pokemonStore.selectedGeneration);
-        if (pokemon) pokemonStore.addEvent(`${capitalize(pokemon.name)} appeared!`);
+
+        const pokemon = await fetchRandomPokemon(
+            pokemonStore.selectedGeneration
+        );
+        if (pokemon)
+            pokemonStore.addEvent(`${capitalize(pokemon.name)} appeared!`);
         isFindingPokemon.value = false;
     } catch (err) {
         pokemonStore.addEvent('Error finding Pokemon. Try again!');
@@ -44,17 +55,19 @@ const handleFind = async () => {
 };
 
 const handleIgnore = () => {
-  if (!pokemonStore.currentPokemon) return;
-  pokemonStore.currentPokemon = null;
-  resetCatch();
+    if (!pokemonStore.currentPokemon) return;
+    pokemonStore.currentPokemon = null;
+    resetCatch();
 };
 
 const handleThrow = async () => {
-  const currentPokemon = pokemonStore.currentPokemon;
-  if (!currentPokemon) return;
+    const currentPokemon = pokemonStore.currentPokemon;
+    if (!currentPokemon) return;
 
-  pokemonStore.addEvent(`${trainerStore.trainerName} throws ball at ${capitalize(currentPokemon.name)}!`);
-  await attemptThrow();
+    pokemonStore.addEvent(
+        `${trainerStore.trainerName} throws ball at ${capitalize(currentPokemon.name)}!`
+    );
+    await attemptThrow();
 };
 
 const showCollectionView = () => emit('open-collection');
@@ -68,9 +81,9 @@ const quitGame = () => emit('quit-game');
 
             <!-- Generation selection moved to HomeView -->
 
-            <button 
-                type="button" 
-                name="btn-find" 
+            <button
+                type="button"
+                name="btn-find"
                 @click="handleFind"
                 :disabled="hasPokemon"
             >

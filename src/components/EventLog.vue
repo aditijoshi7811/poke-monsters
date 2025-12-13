@@ -16,11 +16,6 @@ const eventListText = computed(() => {
     return null;
 });
 
-const latestEvent = computed(() => {
-    if (pokemonStore.events.length === 0) return null;
-    return pokemonStore.events[pokemonStore.events.length - 1];
-});
-
 // Watch for new events and trigger typewriter animation
 watch(
     () => pokemonStore.events.length,
@@ -30,14 +25,14 @@ watch(
             clearInterval(typeInterval);
             typeInterval = null;
         }
-        
+
         if (pokemonStore.events.length > 0) {
             const latestMsg = pokemonStore.events[0].message;
             displayedText.value = '';
             isTyping.value = true;
-            
+
             let index = 0;
-            
+
             typeInterval = setInterval(() => {
                 if (index < latestMsg.length) {
                     displayedText.value += latestMsg[index];
@@ -59,10 +54,16 @@ watch(
             {{ eventListText }}
         </div>
         <div v-else class="events-list">
-            <div v-for="(event, index) in pokemonStore.events" :key="event.id" class="event-item" :class="{ 'latest-event': index === 0 }">
+            <div
+                v-for="(event, index) in pokemonStore.events"
+                :key="event.id"
+                class="event-item"
+                :class="{ 'latest-event': index === 0 }"
+            >
                 <span class="event-time">{{ event.timestamp }}</span>
                 <span v-if="index === 0" class="event-text typing">
-                    {{ displayedText }}<span v-if="isTyping" class="typing-cursor">|</span>
+                    {{ displayedText
+                    }}<span v-if="isTyping" class="typing-cursor">|</span>
                 </span>
                 <span v-else class="event-text">{{ event.message }}</span>
             </div>
@@ -137,10 +138,12 @@ watch(
 }
 
 @keyframes blink {
-    0%, 49% {
+    0%,
+    49% {
         opacity: 1;
     }
-    50%, 100% {
+    50%,
+    100% {
         opacity: 0;
     }
 }

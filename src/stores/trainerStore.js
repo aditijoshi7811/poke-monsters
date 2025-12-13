@@ -31,17 +31,23 @@ export const useTrainerStore = defineStore('trainer', () => {
             id: pokemon.id,
             name: pokemon.name,
             image: pokemon.sprites?.front_default || '',
-            types: pokemon.types?.map(t => ({ type: { name: t.type.name } })) || [],
+            types:
+                pokemon.types?.map((t) => ({ type: { name: t.type.name } })) ||
+                [],
             height: pokemon.height,
             weight: pokemon.weight,
-            speed: pokemon.stats?.find(s => s.stat.name === 'speed')?.base_stat || 0,
+            speed:
+                pokemon.stats?.find((s) => s.stat.name === 'speed')
+                    ?.base_stat || 0,
             caughtAt: new Date().toISOString()
         });
     };
 
     // Load caught Pokemon from localStorage
     const loadCaughtPokemon = () => {
-        const stored = localStorage.getItem(`caughtPokemon_${trainerName.value}`);
+        const stored = localStorage.getItem(
+            `caughtPokemon_${trainerName.value}`
+        );
         if (stored) {
             caughtPokemon.value = JSON.parse(stored);
         }
@@ -49,7 +55,10 @@ export const useTrainerStore = defineStore('trainer', () => {
 
     // Save caught Pokemon to localStorage
     const saveCaughtPokemon = () => {
-        localStorage.setItem(`caughtPokemon_${trainerName.value}`, JSON.stringify(caughtPokemon.value));
+        localStorage.setItem(
+            `caughtPokemon_${trainerName.value}`,
+            JSON.stringify(caughtPokemon.value)
+        );
     };
 
     // Reset trainer data

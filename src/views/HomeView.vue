@@ -1,4 +1,3 @@
-
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
 import { usePokemonStore } from '@/stores/pokemonStore';
@@ -23,13 +22,14 @@ const shouldShowError = computed(
 );
 
 // Auto-focus input when component mounts
-onMounted(() => {  
+onMounted(() => {
     if (inputRef.value) {
         inputRef.value.focus();
     }
     // Fetch available generations for the dropdown
     pokemonStore.fetchGenerations().catch((err) => {
         alert('Failed to load Pokémon generations. Please try again.');
+        console.error(err);
     });
 });
 
@@ -47,19 +47,23 @@ const handleSelectKeydown = (e) => {
             selectRef.value.showPicker();
         } else {
             // Fallback: simulate opening by setting size temporarily
-            selectRef.value.size = selectRef.value.options.length > 5 ? 5 : selectRef.value.options.length;
+            selectRef.value.size =
+                selectRef.value.options.length > 5
+                    ? 5
+                    : selectRef.value.options.length;
         }
     }
 };
 
-
 // Computed generation options (use API data)
 const generationOptions = computed(() => {
-    return (pokemonStore.generations || []).map(g => {
-        const parts = g.url ? g.url.split('/').filter(Boolean) : [];
-        const id = parts.length ? Number(parts[parts.length - 1]) : null;
-        return { value: id, label: `Generation ${id}` };
-    }).filter(o => o.value != null);
+    return (pokemonStore.generations || [])
+        .map((g) => {
+            const parts = g.url ? g.url.split('/').filter(Boolean) : [];
+            const id = parts.length ? Number(parts[parts.length - 1]) : null;
+            return { value: id, label: `Generation ${id}` };
+        })
+        .filter((o) => o.value != null);
 });
 
 // When generations load, ensure selectedGeneration is set to a valid id (first generation) if not already valid
@@ -67,9 +71,19 @@ watch(
     () => pokemonStore.generations,
     (gens) => {
         if (Array.isArray(gens) && gens.length) {
-            const parts = gens[0].url ? gens[0].url.split('/').filter(Boolean) : [];
-            const firstId = parts.length ? Number(parts[parts.length - 1]) : null;
-            if (firstId && (!pokemonStore.selectedGeneration || !generationOptions.value.some(o => o.value === pokemonStore.selectedGeneration))) {
+            const parts = gens[0].url
+                ? gens[0].url.split('/').filter(Boolean)
+                : [];
+            const firstId = parts.length
+                ? Number(parts[parts.length - 1])
+                : null;
+            if (
+                firstId &&
+                (!pokemonStore.selectedGeneration ||
+                    !generationOptions.value.some(
+                        (o) => o.value === pokemonStore.selectedGeneration
+                    ))
+            ) {
                 pokemonStore.selectedGeneration = firstId;
             }
         }
@@ -90,12 +104,15 @@ const startGame = async () => {
 
     // Save trainer name and generation to localStorage
     localStorage.setItem('trainerName', trainerName.value);
-    localStorage.setItem('selectedGeneration', pokemonStore.selectedGeneration.toString());
+    localStorage.setItem(
+        'selectedGeneration',
+        pokemonStore.selectedGeneration.toString()
+    );
 
     // Store the trainer name in the Pinia store
     trainerStore.setTrainerName(trainerName.value);
 
-     // Store the generation name in the Pinia store
+    // Store the generation name in the Pinia store
     pokemonStore.setSelectedGeneration(pokemonStore.selectedGeneration);
 
     // Store the trainer name to display after transition
@@ -116,7 +133,9 @@ const startGame = async () => {
         :class="{ 'is-transitioning': isTransitioning }"
     >
         <div class="container">
-            <h1>Welcome {{ isTransitioning ? inputTrainerName : 'Trainer' }}</h1>
+            <h1>
+                Welcome {{ isTransitioning ? inputTrainerName : 'Trainer' }}
+            </h1>
 
             <form id="form-registration" @submit.prevent="submit">
                 <label for="trainer-name">Enter Your Trainer Name:</label>
@@ -143,7 +162,13 @@ const startGame = async () => {
                     aria-label="Select Pokemon generation"
                     @keydown="handleSelectKeydown"
                 >
-                    <option v-for="g in generationOptions" :key="g.value" :value="g.value">{{ g.label }}</option>
+                    <option
+                        v-for="g in generationOptions"
+                        :key="g.value"
+                        :value="g.value"
+                    >
+                        {{ g.label }}
+                    </option>
                 </select>
 
                 <p
@@ -170,7 +195,6 @@ const startGame = async () => {
     </main>
 </template>
 
-
 <style lang="scss" scoped>
 @import '@/styles/variables.scss';
 
@@ -181,9 +205,11 @@ const startGame = async () => {
     min-height: 100vh;
     width: 100%;
     background: linear-gradient(135deg, $pokemon-white 0%, #f0f0f0 100%);
-    transition: justify-content $transition-slow, align-items $transition-slow;
+    transition:
+        justify-content $transition-slow,
+        align-items $transition-slow;
 
-        .container {
+    .container {
         text-align: center;
         max-width: 600px;
         padding: $spacing-xl;
@@ -192,7 +218,9 @@ const startGame = async () => {
             margin-bottom: $spacing-xl;
             color: $primary;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-            transition: transform $transition-slow, font-size $transition-slow,
+            transition:
+                transform $transition-slow,
+                font-size $transition-slow,
                 margin-bottom $transition-slow;
         }
 
@@ -221,7 +249,8 @@ const startGame = async () => {
                 border: 3px solid $secondary;
                 min-width: 300px;
                 background-color: white;
-                transition: border-color $transition-normal,
+                transition:
+                    border-color $transition-normal,
                     box-shadow $transition-normal,
                     background-color $transition-normal;
 
@@ -238,7 +267,9 @@ const startGame = async () => {
                     border: 1px solid $border-color;
                     min-width: 300px;
                     background-color: white;
-                    transition: border-color $transition-normal, box-shadow $transition-normal;
+                    transition:
+                        border-color $transition-normal,
+                        box-shadow $transition-normal;
 
                     &:hover {
                         border-color: $primary;
@@ -308,8 +339,8 @@ const startGame = async () => {
                     width: 14px;
                     height: 14px;
                     border-radius: 50%;
-                    border: 2px solid rgba(255,255,255,0.3);
-                    border-top-color: rgba(255,255,255,0.9);
+                    border: 2px solid rgba(255, 255, 255, 0.3);
+                    border-top-color: rgba(255, 255, 255, 0.9);
                     animation: spin 1s linear infinite;
                 }
 
@@ -386,6 +417,8 @@ const startGame = async () => {
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 </style>

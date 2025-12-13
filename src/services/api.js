@@ -3,7 +3,8 @@
  * Base configuration for all API requests using Fetch API
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://pokeapi.co/api/v2';
+const API_BASE_URL =
+    import.meta.env.VITE_API_URL || 'https://pokeapi.co/api/v2';
 
 /**
  * Fetches data from a GET endpoint
@@ -26,14 +27,16 @@ export const getRequest = async (endpoint, options = {}) => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                ...options.headers,
+                ...options.headers
             },
-            ...options,
+            ...options
         });
 
         // Handle non-OK responses
         if (!response.ok) {
-            throw new Error(`API Error: ${response.status} ${response.statusText}`);
+            throw new Error(
+                `API Error: ${response.status} ${response.statusText}`
+            );
         }
 
         // Parse and return JSON response
@@ -60,14 +63,16 @@ export const postRequest = async (endpoint, body, options = {}) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                ...options.headers,
+                ...options.headers
             },
             body: JSON.stringify(body),
-            ...options,
+            ...options
         });
 
         if (!response.ok) {
-            throw new Error(`API Error: ${response.status} ${response.statusText}`);
+            throw new Error(
+                `API Error: ${response.status} ${response.statusText}`
+            );
         }
 
         const data = await response.json();
@@ -80,5 +85,5 @@ export const postRequest = async (endpoint, body, options = {}) => {
 
 export default {
     getRequest,
-    postRequest,
+    postRequest
 };

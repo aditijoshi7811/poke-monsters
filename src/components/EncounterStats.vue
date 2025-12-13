@@ -4,7 +4,7 @@ const props = defineProps({
         type: Array,
         required: false,
         default: () => []
-    },
+    }
 });
 </script>
 
@@ -56,7 +56,6 @@ const props = defineProps({
 .stats-table td {
     padding: $spacing-lg $spacing-md;
 }
-
 
 .label {
     font-weight: 700;

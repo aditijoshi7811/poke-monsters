@@ -20,7 +20,12 @@ body {
 }
 
 // Typography
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-weight: 700;
     line-height: 1.2;
     color: $text-primary;
@@ -66,7 +71,9 @@ select {
     border-radius: $radius-md;
     background-color: white;
     color: $text-primary;
-    transition: border-color $transition-normal, box-shadow $transition-normal;
+    transition:
+        border-color $transition-normal,
+        box-shadow $transition-normal;
 
     &:hover {
         border-color: $pokemon-gray;
@@ -94,7 +101,10 @@ button:not(.skip-to-content) {
     cursor: pointer;
     background-color: $primary;
     color: white;
-    transition: background-color $transition-normal, transform $transition-fast, box-shadow $transition-normal;
+    transition:
+        background-color $transition-normal,
+        transform $transition-fast,
+        box-shadow $transition-normal;
     box-shadow: $shadow-md;
     min-height: 44px; // WCAG Touch Target Size
 
@@ -144,7 +154,6 @@ a {
     padding: 0 $spacing-md;
 }
 
-
 // Skip to content link (Accessibility)
 .skip-to-content {
     position: absolute;
@@ -157,7 +166,9 @@ a {
     text-decoration: none;
     font-weight: 600;
     border-radius: $radius-md;
-    transition: top $transition-normal, left $transition-normal;
+    transition:
+        top $transition-normal,
+        left $transition-normal;
 
     &:focus {
         top: $spacing-md;
@@ -191,6 +202,3 @@ a {
         scroll-behavior: auto !important;
     }
 }
-
-
-

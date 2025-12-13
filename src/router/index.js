@@ -17,7 +17,7 @@ const router = createRouter({
         },
         {
             path: '/collection',
-            name: 'collection',
+            name: 'collection'
         }
     ]
 });

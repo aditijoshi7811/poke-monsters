@@ -5,7 +5,7 @@ import { capitalize } from '@/composables/useStringUtils';
 import { useSortable } from '@/composables/useSortable';
 import { useFilterable } from '@/composables/useFilterable';
 
-const props = defineProps({
+defineProps({
     isOpen: {
         type: Boolean,
         required: true
@@ -104,7 +104,6 @@ const filterByType = (pokemon, selectedTypes) => {
     return pokemonTypesList.some((type) => selectedTypes.has(type));
 };
 
-
 // Composables for filtering and sorting
 const {
     selectedFilters: selectedTypes,
@@ -115,10 +114,8 @@ const {
 const { sortColumn, sortDirection, toggleSort, getSortIndicator, sortedItems } =
     useSortable(filteredItems, sortFunctions);
 
-
-
 /**
- * Toggles the visibility of the filter panel. 
+ * Toggles the visibility of the filter panel.
  */
 const toggleFilterPanel = () => {
     showFilterPanel.value = !showFilterPanel.value;
@@ -126,7 +123,7 @@ const toggleFilterPanel = () => {
 
 /**
  * Toggles the visibility of the sort menu.
- */ 
+ */
 const toggleSortMenu = () => {
     showSortMenu.value = !showSortMenu.value;
 };
@@ -162,10 +159,10 @@ const closeModal = () => {
     emit('close');
 };
 
- /**
-  * Handles keydown events for closing the modal with the Escape key.
-  * @param {KeyboardEvent} e - The keyboard event.
-  */
+/**
+ * Handles keydown events for closing the modal with the Escape key.
+ * @param {KeyboardEvent} e - The keyboard event.
+ */
 const handleKeyDown = (e) => {
     if (e.key === 'Escape') {
         closeModal();
@@ -184,7 +181,6 @@ const displayedTotalCaptured = computed(() => {
     return trainerStore.caughtPokemon.filter((p) => namesSet.has(p.name))
         .length;
 });
-
 
 // Get all unique types from caught Pokemon
 const allTypes = computed(() => {
