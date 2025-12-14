@@ -1,5 +1,12 @@
 import { ref, watch } from 'vue';
 
+/**
+ * Composable for handling Pokémon animation transitions.
+ * @param {Ref<Object|null>} pokemonRef - A ref containing the current Pokémon object or null.
+ * @param {Object} trainerStore - The trainer store containing caught Pokémon data.
+ * @param {number} animationDuration - Duration of the animation in milliseconds.
+ * @return {Object} An object containing isAnimatingOut and displayPokemon refs.
+ */
 export function usePokemonAnimation(
     pokemonRef,
     trainerStore,

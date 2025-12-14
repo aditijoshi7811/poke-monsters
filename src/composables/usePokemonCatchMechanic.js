@@ -2,8 +2,11 @@ import { ref } from 'vue';
 import { capitalize } from './useStringUtils';
 
 /**
- * Handles the catch mechanic: success chance + failure/runaway logic.
- * Uses the stores directly so it stays simple to use from components.
+ * Composable for managing the Pokémon catch mechanic.
+ * @param {Object} trainerStore - The trainer store instance with necessary methods.
+ * @param {Object} pokemonStore - The Pokémon store instance with necessary methods and data.
+ * @param {Function} emitFn - Function to emit events (e.g., Vue's emit).
+ * @return {Object} An object containing failureCount, isLoading, throw function, and reset function.
  */
 export function usePokemonCatchMechanic(
     trainerStore,

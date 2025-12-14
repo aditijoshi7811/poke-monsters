@@ -1,5 +1,10 @@
 import { ref } from 'vue';
 
+/**
+ * Composable for fetching a random Pokémon from a specified generation.
+ * @param {Object} pokemonStore - The Pokémon store instance with necessary methods and data.
+ * @return {Object} An object containing isLoading and fetchRandomPokemon function.
+ */
 export function useRandomPokemon(pokemonStore) {
     const isLoading = ref(false);
 

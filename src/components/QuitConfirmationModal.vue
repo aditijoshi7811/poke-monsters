@@ -8,28 +8,25 @@ defineProps({
 
 const emit = defineEmits(['confirm', 'cancel']);
 
+/**
+ * Handles the confirmation action to quit the game.
+ * Emits the 'confirm' event to the parent component.
+ */
 const handleConfirm = () => {
     emit('confirm');
 };
 
+/**
+ * Handles the cancellation action to dismiss the quit confirmation modal.
+ * Emits the 'cancel' event to the parent component.
+ */
 const handleCancel = () => {
     emit('cancel');
-};
-
-const handleKeyDown = (e) => {
-    if (e.key === 'Escape') {
-        handleCancel();
-    }
 };
 </script>
 
 <template>
-    <div
-        v-if="isOpen"
-        class="modal-overlay"
-        @click="handleCancel"
-        @keydown="handleKeyDown"
-    >
+    <div v-if="isOpen" class="modal-overlay" @click="handleCancel">
         <div class="quit-modal" @click.stop>
             <h2>Are you sure?</h2>
             <p>Do you want to quit the game and return to the title screen?</p>

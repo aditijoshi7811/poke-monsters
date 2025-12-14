@@ -20,7 +20,12 @@ const trainerStore = useTrainerStore();
 const showSortMenu = ref(false);
 const showFilterPanel = ref(false);
 
-// Custom sort functions for specific columns
+/**
+ * Defines sorting functions for various Pokémon attributes.
+ * @type {Object} - An object mapping column names to their respective sorting functions.
+ * Each function takes two Pokémon objects and a direction ('asc' or 'desc') and returns a comparison value.
+ * @return {number} - A negative number if a < b, positive if a > b, or 0 if equal.
+ */
 const sortFunctions = {
     id: (a, b, direction) => {
         if (direction === 'asc') {
@@ -62,7 +67,11 @@ const sortFunctions = {
         }
     }
 };
-// Prepare Pokemon data with computed properties for display
+
+/**
+ * Computes a list of unique caught Pokémon with display-friendly properties.
+ * @return {Array<Object>} An array of unique Pokémon objects with additional display properties.
+ */
 const pokemonTypes = computed(() => {
     const uniquePokemonMap = new Map();
     // Precompute counts by name so we can show how many times each Pokemon was captured
@@ -160,29 +169,31 @@ const closeModal = () => {
 };
 
 /**
- * Handles keydown events for closing the modal with the Escape key.
- * @param {KeyboardEvent} e - The keyboard event.
+ * Computes the total number of caught Pokémon.
+ * @return {number} The total count of caught Pokémon.
  */
-const handleKeyDown = (e) => {
-    if (e.key === 'Escape') {
-        closeModal();
-    }
-};
-
-// Total unique caught Pokemon
 const totalCaught = computed(() => trainerStore.caughtPokemon.length);
 
-// Unique count for the currently displayed list (used in header badges)
+/**
+ * Computes the number of unique Pokémon currently displayed.
+ * @return {number} The count of unique Pokémon in the sorted and filtered list.
+ */
 const uniqueCount = computed(() => sortedItems.value.length);
 
-// Total captured among the currently displayed Pokemon (counts duplicates)
+/**
+ * Computes the total number of captured Pokémon currently displayed.
+ * @return {number} The total count of captured Pokémon in the sorted and filtered list.
+ */
 const displayedTotalCaptured = computed(() => {
     const namesSet = new Set(sortedItems.value.map((p) => p.name));
     return trainerStore.caughtPokemon.filter((p) => namesSet.has(p.name))
         .length;
 });
 
-// Get all unique types from caught Pokemon
+/**
+ * Computes all unique Pokémon types from the caught Pokémon for filter options.
+ * @return {Array<String>} An array of unique Pokémon type names.
+ */
 const allTypes = computed(() => {
     const typesSet = new Set();
     pokemonTypes.value.forEach((pokemon) => {
@@ -196,12 +207,7 @@ const allTypes = computed(() => {
 
 <template>
     <teleport to="body">
-        <div
-            v-if="isOpen"
-            class="modal-overlay"
-            @click="closeModal"
-            @keydown="handleKeyDown"
-        >
+        <div v-if="isOpen" class="modal-overlay" @click="closeModal">
             <div
                 class="modal-content"
                 role="dialog"

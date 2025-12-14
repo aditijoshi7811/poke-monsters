@@ -46,22 +46,43 @@ const {
     trigger: triggerSuccess
 } = useSuccessAnimation(1000);
 
+/**
+ * Opens the collection modal by setting the corresponding state to true.
+ * @return {void}
+ */
 const openCollectionModal = () => {
     isCollectionModalOpen.value = true;
 };
-
+/**
+ * Closes the collection modal by setting the corresponding state to false.
+ * @return {void}
+ */
 const closeCollectionModal = () => {
     isCollectionModalOpen.value = false;
 };
-
+/**
+ * Handles the successful catch of a Pokémon.
+ * Triggers the success animation with the caught Pokémon's name.
+ * @param {string} pokemonName - The name of the caught Pokémon.
+ * @return {void}
+ */
 const handleCatchSuccess = (pokemonName) => {
     triggerSuccess(pokemonName);
 };
 
+/**
+ * Handles the quit game action by displaying the quit confirmation modal.
+ * @return {void}
+ */
 const handleQuitClick = () => {
     showQuitConfirmation.value = true;
 };
 
+/**
+ * Confirms the quit action, saves the trainer's caught Pokémon,
+ * clears the stores, and navigates back to the title screen.
+ * @return {void}
+ */
 const confirmQuit = () => {
     trainerStore.saveCaughtPokemon();
     trainerStore.clearStore();
@@ -70,6 +91,10 @@ const confirmQuit = () => {
     router.push('/');
 };
 
+/**
+ * Cancels the quit action by hiding the quit confirmation modal.
+ * @return {void}
+ */
 const cancelQuit = () => {
     showQuitConfirmation.value = false;
 };

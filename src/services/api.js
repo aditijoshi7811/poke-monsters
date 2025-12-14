@@ -48,42 +48,6 @@ export const getRequest = async (endpoint, options = {}) => {
     }
 };
 
-/**
- * Fetches data from a POST endpoint
- * @param {string} endpoint - The API endpoint
- * @param {object} body - The request body data
- * @param {object} options - Additional options (headers, etc.)
- * @returns {Promise} - Promise that resolves with the API response data
- */
-export const postRequest = async (endpoint, body, options = {}) => {
-    try {
-        const url = `${API_BASE_URL}${endpoint}`;
-
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers
-            },
-            body: JSON.stringify(body),
-            ...options
-        });
-
-        if (!response.ok) {
-            throw new Error(
-                `API Error: ${response.status} ${response.statusText}`
-            );
-        }
-
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error('POST request failed:', error);
-        throw error;
-    }
-};
-
 export default {
-    getRequest,
-    postRequest
+    getRequest
 };

@@ -69,7 +69,7 @@ const props = defineProps({
 }
 
 /* breakpoint-md: 768px from variables.scss */
-@media (max-width: 768px) {
+@media (max-width: $breakpoint-md) {
     .stats-table {
         font-size: $font-size-base;
     }

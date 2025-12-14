@@ -1,5 +1,11 @@
 import { ref, computed } from 'vue';
 
+/**
+ * Composable for sorting items based on selected column and direction.
+ * @param {Ref<Array>} items - A ref containing the array of items to be sorted.
+ * @param {Object} sortFunctions - An object mapping column names to custom sort functions.
+ * @return {Object} An object containing sortColumn, sortDirection, toggleSort, getSortIndicator, and sortedItems.
+ */
 export function useSortable(items, sortFunctions = {}) {
     const sortColumn = ref(null);
     const sortDirection = ref('asc');

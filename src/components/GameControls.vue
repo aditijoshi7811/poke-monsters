@@ -24,24 +24,28 @@ const isFindingPokemon = ref(false);
 const hasPokemon = computed(
     () => !!pokemonStore.currentPokemon && !fetchLoading.value
 );
-// Unique Pokemon count and total captures for the trainer
+
+/**
+ * Computes the number of unique Pokémon caught by the trainer.
+ * @return {number} The count of unique Pokémon names in the trainer's caught list.
+ */
 const uniqueCount = computed(
     () => new Set(trainerStore.caughtPokemon.map((p) => p.name)).size
 );
 
+/**
+ * Handles the "Find" button click event to encounter a random Pokémon.
+ * Disables further finds if a Pokémon is already encountered.
+ * Initiates the fetch and updates the event log accordingly.
+ * Emits events for success or failure of the fetch operation.
+ * @return {Promise<void>} A promise that resolves when the operation is complete.
+ */
 const handleFind = async () => {
     isFindingPokemon.value = true;
     if (hasPokemon.value) return;
-    // reset failures for a new encounter
     resetCatch();
 
     try {
-        // If generation data is missing, fetch it first
-        const genId = pokemonStore.selectedGeneration;
-        if (!pokemonStore.pokemonListByGeneration[genId]) {
-            await pokemonStore.fetchPokemonListByGeneration(genId);
-        }
-
         const pokemon = await fetchRandomPokemon(
             pokemonStore.selectedGeneration
         );
@@ -54,12 +58,22 @@ const handleFind = async () => {
     }
 };
 
+/**
+ * Handles the "Ignore" button click event to dismiss the current encountered Pokémon.
+ * Resets the current Pokémon in the store and the catch mechanic state.
+ */
 const handleIgnore = () => {
     if (!pokemonStore.currentPokemon) return;
     pokemonStore.currentPokemon = null;
     resetCatch();
 };
 
+/**
+ * Handles the "Throw" button click event to attempt to catch the current encountered Pokémon.
+ * Adds an event log entry for the throw action.
+ * Invokes the catch mechanic to process the throw attempt.
+ * @return {Promise<void>} A promise that resolves when the throw attempt is complete.
+ */
 const handleThrow = async () => {
     const currentPokemon = pokemonStore.currentPokemon;
     if (!currentPokemon) return;
@@ -78,9 +92,6 @@ const quitGame = () => emit('quit-game');
     <form id="form-controls" @submit.prevent>
         <fieldset>
             <legend>Controls</legend>
-
-            <!-- Generation selection moved to HomeView -->
-
             <button
                 type="button"
                 name="btn-find"

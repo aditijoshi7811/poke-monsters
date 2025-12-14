@@ -1,5 +1,11 @@
 import { ref, computed } from 'vue';
 
+/**
+ * Composable for filtering items based on selected filters.
+ * @param {Ref<Array>} items - A ref containing the array of items to be filtered.
+ * @param {Function} filterFn - A function that determines if an item matches the selected filters.
+ * @return {Object} An object containing selectedFilters, toggleFilter, clearFilters, and filteredItems.
+ */
 export function useFilterable(items, filterFn) {
     const selectedFilters = ref(new Set());
 

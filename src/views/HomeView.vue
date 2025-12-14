@@ -13,10 +13,16 @@ const inputTrainerName = ref('');
 const hasInteracted = ref(false);
 const inputRef = ref(null);
 
-// Computed property to check if button should be disabled
+/**
+ * Computed property to determine if the start button should be disabled.
+ * @return {boolean} True if the trainer name is empty or only whitespace, false otherwise.
+ */
 const isButtonDisabled = computed(() => !trainerName.value.trim());
 
-// Show error only if user has interacted and field is empty
+/**
+ * Computed property to determine if the error message should be shown.
+ * @return {boolean} True if the user has interacted with the input and the button is disabled, false otherwise.
+ */
 const shouldShowError = computed(
     () => hasInteracted.value && isButtonDisabled.value
 );
@@ -33,12 +39,21 @@ onMounted(() => {
     });
 });
 
+/**
+ * Handles input interaction by setting hasInteracted to true.
+ * @return {void}
+ */
 const handleInputInteraction = () => {
     hasInteracted.value = true;
 };
 
 const selectRef = ref(null);
-
+/**
+ * Handles keydown events on the generation select element.
+ * Opens the select dropdown when Enter or Space is pressed.
+ * @param {KeyboardEvent} e - The keyboard event.
+ * @return {void}
+ */
 const handleSelectKeydown = (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
@@ -55,7 +70,10 @@ const handleSelectKeydown = (e) => {
     }
 };
 
-// Computed generation options (use API data)
+/**
+ * Computed property to generate generation options for the select dropdown.
+ * @return {Array} An array of generation option objects with value and label.
+ */
 const generationOptions = computed(() => {
     return (pokemonStore.generations || [])
         .map((g) => {
@@ -66,7 +84,10 @@ const generationOptions = computed(() => {
         .filter((o) => o.value != null);
 });
 
-// When generations load, ensure selectedGeneration is set to a valid id (first generation) if not already valid
+/**
+ * Watcher to set a default selected generation if none is selected
+ * or if the current selection is invalid.
+ */
 watch(
     () => pokemonStore.generations,
     (gens) => {
@@ -95,6 +116,11 @@ const submit = (e) => {
     e.preventDefault();
 };
 
+/**
+ * Starts the game by validating input, saving data to localStorage and stores,
+ * and navigating to the capture view after a transition.
+ * @return {Promise<void>} A promise that resolves when the navigation is complete.
+ */
 const startGame = async () => {
     // If name empty, show validation and don't start
     if (!trainerName.value || !trainerName.value.trim()) {

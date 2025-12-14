@@ -107,7 +107,7 @@ defineProps({
 }
 
 /* breakpoint-md: 768px from variables.scss */
-@media (max-width: 768px) {
+@media (max-width: $breakpoint-md) {
     .pokemon-images {
         justify-content: center;
         width: 100%;

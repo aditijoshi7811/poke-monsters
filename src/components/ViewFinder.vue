@@ -9,12 +9,18 @@ import PokemonImages from './PokemonImages.vue';
 
 const pokemonStore = usePokemonStore();
 const trainerStore = useTrainerStore();
+
+// Use the usePokemonAnimation composable to manage animation state
 const { isAnimatingOut, displayPokemon } = usePokemonAnimation(
     computed(() => pokemonStore.currentPokemon),
     trainerStore,
     400
 );
 
+/**
+ * Computes a formatted string of the Pokémon's types.
+ * @return {string} A comma-separated string of capitalized Pokémon type names.
+ */
 const pokemonTypes = computed(() => {
     if (!displayPokemon.value?.types) return '';
     return displayPokemon.value.types
@@ -22,6 +28,10 @@ const pokemonTypes = computed(() => {
         .join(', ');
 });
 
+/**
+ * Computes an array of encounter statistics for the displayed Pokémon.
+ * @return {Array<{ label: string, value: string }>} An array of objects containing stat labels and their corresponding values.
+ */
 const encounterStats = computed(() => {
     if (!displayPokemon.value) return [];
     return [
@@ -110,8 +120,7 @@ const encounterStats = computed(() => {
     font-size: $font-size-lg;
 }
 
-/* breakpoint-md: 768px for stacking table below images in mobile view */
-@media (max-width: 768px) {
+@media (max-width: $breakpoint-md) {
     .pokemon-container {
         flex-direction: column;
         gap: $spacing-lg;
