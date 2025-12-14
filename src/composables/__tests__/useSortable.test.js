@@ -10,7 +10,7 @@ describe('useSortable', () => {
         const items = ref([]);
         const sortFns = {};
         const sortable = useSortable(items, sortFns);
-        
+
         expect(sortable).toHaveProperty('sortColumn');
         expect(sortable).toHaveProperty('sortDirection');
         expect(sortable).toHaveProperty('toggleSort');
@@ -25,7 +25,7 @@ describe('useSortable', () => {
         const items = ref([]);
         const sortFns = {};
         const { sortDirection } = useSortable(items, sortFns);
-        
+
         expect(sortDirection.value).toBe('asc');
     });
 
@@ -36,7 +36,7 @@ describe('useSortable', () => {
         const items = ref([]);
         const sortFns = { name: () => 0 };
         const { sortColumn, toggleSort } = useSortable(items, sortFns);
-        
+
         toggleSort('name');
         expect(sortColumn.value).toBe('name');
     });
@@ -48,7 +48,7 @@ describe('useSortable', () => {
         const items = ref([]);
         const sortFns = { id: () => 0 };
         const { sortDirection, toggleSort } = useSortable(items, sortFns);
-        
+
         toggleSort('id');
         expect(sortDirection.value).toBe('asc');
         toggleSort('id');
@@ -62,7 +62,7 @@ describe('useSortable', () => {
         const items = ref([]);
         const sortFns = { name: () => 0 };
         const { toggleSort, getSortIndicator } = useSortable(items, sortFns);
-        
+
         toggleSort('name');
         expect(getSortIndicator('name')).toBe(' ↑');
         expect(getSortIndicator('id')).toBe(' ⇅');
@@ -74,10 +74,10 @@ describe('useSortable', () => {
     it('sorts items using provided sort function', () => {
         const items = ref([{ id: 3 }, { id: 1 }, { id: 2 }]);
         const sortFns = {
-            id: (a, b, dir) => dir === 'asc' ? a.id - b.id : b.id - a.id
+            id: (a, b, dir) => (dir === 'asc' ? a.id - b.id : b.id - a.id)
         };
         const { toggleSort, sortedItems } = useSortable(items, sortFns);
-        
+
         toggleSort('id');
         expect(sortedItems.value[0].id).toBe(1);
         expect(sortedItems.value[2].id).toBe(3);

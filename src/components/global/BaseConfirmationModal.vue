@@ -1,8 +1,5 @@
 <script setup>
-import { useI18n } from 'vue-i18n';
 import { useModalEscapeKey } from '@/composables/useModalEscapeKey';
-
-const { t } = useI18n();
 
 const props = defineProps({
     isOpen: {

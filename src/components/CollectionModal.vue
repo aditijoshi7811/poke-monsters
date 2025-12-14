@@ -277,7 +277,10 @@ const allTypes = computed(() => {
                                             }
                                         )
                                     "
-                                    @click="toggleSort(col); showSortMenu = false"
+                                    @click="
+                                        toggleSort(col);
+                                        showSortMenu = false;
+                                    "
                                     :class="{ active: sortColumn === col }"
                                 >
                                     {{ capitalize(col) }}

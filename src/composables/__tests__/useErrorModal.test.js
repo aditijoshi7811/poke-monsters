@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { useErrorModal } from '../useErrorModal';
 
 // Mock vue-router
@@ -14,7 +14,7 @@ describe('useErrorModal', () => {
      */
     it('returns errorModalOpen, errorMessage, showError, and closeErrorAndGoHome', () => {
         const modal = useErrorModal();
-        
+
         expect(modal).toHaveProperty('errorModalOpen');
         expect(modal).toHaveProperty('errorMessage');
         expect(modal).toHaveProperty('showError');
@@ -34,7 +34,7 @@ describe('useErrorModal', () => {
      */
     it('opens modal when showError is called', () => {
         const { errorModalOpen, errorMessage, showError } = useErrorModal();
-        
+
         showError('Test error');
         expect(errorModalOpen.value).toBe(true);
         expect(errorMessage.value).toBe('Test error');
@@ -44,8 +44,9 @@ describe('useErrorModal', () => {
      * Test: closeErrorAndGoHome closes modal
      */
     it('closes modal when closeErrorAndGoHome is called', () => {
-        const { errorModalOpen, showError, closeErrorAndGoHome } = useErrorModal();
-        
+        const { errorModalOpen, showError, closeErrorAndGoHome } =
+            useErrorModal();
+
         showError('Test');
         closeErrorAndGoHome();
         expect(errorModalOpen.value).toBe(false);
@@ -55,8 +56,9 @@ describe('useErrorModal', () => {
      * Test: closeErrorAndGoHome clears error message
      */
     it('clears error message when closing', () => {
-        const { errorMessage, showError, closeErrorAndGoHome } = useErrorModal();
-        
+        const { errorMessage, showError, closeErrorAndGoHome } =
+            useErrorModal();
+
         showError('Error message');
         closeErrorAndGoHome();
         expect(errorMessage.value).toBe('');

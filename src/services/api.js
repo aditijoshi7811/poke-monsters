@@ -54,12 +54,12 @@ export const getRequest = async (endpoint, options = {}) => {
         return data;
     } catch (error) {
         console.error('GET request failed:', error);
-        
+
         // Show error modal if handler is set
         if (errorModalHandler) {
             errorModalHandler('Please try again later');
         }
-        
+
         throw error;
     }
 };

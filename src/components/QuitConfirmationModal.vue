@@ -4,7 +4,7 @@ import BaseConfirmationModal from './global/BaseConfirmationModal.vue';
 
 const { t } = useI18n();
 
-const props = defineProps({
+defineProps({
     isOpen: {
         type: Boolean,
         required: true

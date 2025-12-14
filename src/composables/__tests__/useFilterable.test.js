@@ -10,7 +10,7 @@ describe('useFilterable', () => {
         const items = ref([]);
         const filterFn = () => true;
         const filterable = useFilterable(items, filterFn);
-        
+
         expect(filterable).toHaveProperty('selectedFilters');
         expect(filterable).toHaveProperty('toggleFilter');
         expect(filterable).toHaveProperty('clearFilters');
@@ -24,7 +24,7 @@ describe('useFilterable', () => {
         const items = ref([{ name: 'Pikachu' }, { name: 'Charizard' }]);
         const filterFn = () => true;
         const { filteredItems } = useFilterable(items, filterFn);
-        
+
         expect(filteredItems.value).toHaveLength(2);
     });
 
@@ -34,8 +34,11 @@ describe('useFilterable', () => {
     it('adds filter when toggled', () => {
         const items = ref([]);
         const filterFn = () => true;
-        const { selectedFilters, toggleFilter } = useFilterable(items, filterFn);
-        
+        const { selectedFilters, toggleFilter } = useFilterable(
+            items,
+            filterFn
+        );
+
         toggleFilter('Electric');
         expect(selectedFilters.value.has('Electric')).toBe(true);
     });
@@ -46,8 +49,11 @@ describe('useFilterable', () => {
     it('removes filter when toggled again', () => {
         const items = ref([]);
         const filterFn = () => true;
-        const { selectedFilters, toggleFilter } = useFilterable(items, filterFn);
-        
+        const { selectedFilters, toggleFilter } = useFilterable(
+            items,
+            filterFn
+        );
+
         toggleFilter('Fire');
         toggleFilter('Fire');
         expect(selectedFilters.value.has('Fire')).toBe(false);
@@ -59,8 +65,11 @@ describe('useFilterable', () => {
     it('clears all filters', () => {
         const items = ref([]);
         const filterFn = () => true;
-        const { selectedFilters, toggleFilter, clearFilters } = useFilterable(items, filterFn);
-        
+        const { selectedFilters, toggleFilter, clearFilters } = useFilterable(
+            items,
+            filterFn
+        );
+
         toggleFilter('Water');
         toggleFilter('Grass');
         clearFilters();
@@ -78,7 +87,7 @@ describe('useFilterable', () => {
         ]);
         const filterFn = (item, filters) => filters.has(item.type);
         const { toggleFilter, filteredItems } = useFilterable(items, filterFn);
-        
+
         toggleFilter('Fire');
         expect(filteredItems.value).toHaveLength(2);
     });

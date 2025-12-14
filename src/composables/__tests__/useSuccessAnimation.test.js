@@ -53,7 +53,7 @@ describe('useSuccessAnimation', () => {
         const { showAnimation, trigger } = useSuccessAnimation(1000);
         trigger();
         expect(showAnimation.value).toBe(true);
-        
+
         vi.advanceTimersByTime(1000);
         expect(showAnimation.value).toBe(false);
     });
