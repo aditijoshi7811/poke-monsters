@@ -1168,7 +1168,7 @@ const allTypes = computed(() => {
 }
 
 .filter-panel {
-    padding: $spacing-lg;
+    padding: $spacing-sm;
     background-color: rgba($secondary, 0.05);
     border-bottom: 1px solid $border-color;
 }
