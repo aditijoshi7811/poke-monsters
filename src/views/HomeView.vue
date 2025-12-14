@@ -36,7 +36,7 @@ onMounted(() => {
     }
     // Fetch available generations for the dropdown
     pokemonStore.fetchGenerations().catch((err) => {
-        alert(t('home.loadError'));
+        console.error(t('home.loadError'));
         console.error(err);
     });
 });

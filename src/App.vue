@@ -1,9 +1,20 @@
 <script setup>
 import { RouterView } from 'vue-router';
+import { onMounted } from 'vue';
 import '@/styles/global.scss';
+import ApiErrorModal from './components/global/ApiErrorModal.vue';
+import { useErrorModal } from './composables/useErrorModal';
+import { setErrorModalHandler } from './services/api';
+
+// Register the error modal handler with the API service
+const { showError } = useErrorModal();
+onMounted(() => {
+    setErrorModalHandler(showError);
+});
 </script>
 
 <template>
+    <ApiErrorModal />
     <RouterView />
 </template>
 

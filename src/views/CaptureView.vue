@@ -37,7 +37,7 @@ onMounted(async () => {
         );
     } catch (err) {
         // show error in store so user can see it in event log
-        alert(t('gameEvents.generationLoadError'));
+        console.error(t('gameEvents.generationLoadError'));
         return;
     }
 });

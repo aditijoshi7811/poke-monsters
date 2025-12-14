@@ -6,6 +6,16 @@
 const API_BASE_URL =
     import.meta.env.VITE_API_URL || 'https://pokeapi.co/api/v2';
 
+let errorModalHandler = null;
+
+/**
+ * Sets the error modal handler to be called when API requests fail
+ * @param {Function} handler - Function that shows the error modal
+ */
+export const setErrorModalHandler = (handler) => {
+    errorModalHandler = handler;
+};
+
 /**
  * Fetches data from a GET endpoint
  * @param {string} endpoint - The API endpoint (e.g., '/pokemon' or '/users/123')
@@ -44,10 +54,17 @@ export const getRequest = async (endpoint, options = {}) => {
         return data;
     } catch (error) {
         console.error('GET request failed:', error);
+        
+        // Show error modal if handler is set
+        if (errorModalHandler) {
+            errorModalHandler('Please try again later');
+        }
+        
         throw error;
     }
 };
 
 export default {
-    getRequest
+    getRequest,
+    setErrorModalHandler
 };

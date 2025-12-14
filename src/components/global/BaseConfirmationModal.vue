@@ -71,6 +71,7 @@ useModalEscapeKey(() => props.isOpen, handleCancel, '.confirmation-modal');
                     {{ confirmButtonText }}
                 </button>
                 <button
+                    v-if="cancelButtonText"
                     class="btn-no"
                     @click="handleCancel"
                     :aria-label="cancelButtonAriaLabel || cancelButtonText"

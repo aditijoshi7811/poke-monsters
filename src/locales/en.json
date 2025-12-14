@@ -61,6 +61,11 @@
             "confirmButtonText": "Yes",
             "cancelButtonText": "No"
         },
+        "apiError": {
+            "title": "Oops! Something went wrong",
+            "defaultMessage": "Please try again later",
+            "okButton": "Back to Home"
+        },
         "pokedex": {
             "title": "My Pokédex",
             "sortLabel": "Sort options",
