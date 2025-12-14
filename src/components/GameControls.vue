@@ -97,6 +97,8 @@ const quitGame = () => emit('quit-game');
                 name="btn-find"
                 @click="handleFind"
                 :disabled="hasPokemon"
+                :aria-busy="fetchLoading"
+                :aria-label="fetchLoading ? 'Finding Pokemon, please wait' : 'Find a random Pokemon'"
             >
                 Find
             </button>
@@ -105,6 +107,7 @@ const quitGame = () => emit('quit-game');
                 name="btn-ignore"
                 @click="handleIgnore"
                 :disabled="!hasPokemon"
+                aria-label="Ignore current Pokemon and clear the viewfinder"
             >
                 Ignore
             </button>
@@ -113,6 +116,7 @@ const quitGame = () => emit('quit-game');
                 name="btn-throw"
                 @click="handleThrow"
                 :disabled="!hasPokemon"
+                aria-label="Throw Poke Ball at current Pokemon to catch it"
             >
                 Throw
             </button>
@@ -121,12 +125,17 @@ const quitGame = () => emit('quit-game');
                 type="button"
                 name="btn-collection"
                 @click.prevent="showCollectionView"
-                aria-label="Open Pokédex"
+                :aria-label="`Open Pokédex, ${uniqueCount} unique Pokemon caught`"
             >
-                Pokedex <span class="pokedex-badge">({{ uniqueCount }})</span>
+                Pokedex <span class="pokedex-badge" aria-hidden="true">({{ uniqueCount }})</span>
             </button>
 
-            <button type="button" name="btn-quit" @click.prevent="quitGame">
+            <button 
+                type="button" 
+                name="btn-quit" 
+                @click.prevent="quitGame"
+                aria-label="Quit game and return to title screen"
+            >
                 Quit
             </button>
         </fieldset>

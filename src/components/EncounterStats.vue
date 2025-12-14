@@ -10,11 +10,22 @@ const props = defineProps({
 
 <template>
     <div class="pokemon-stats">
-        <table class="stats-table" v-if="props.stats && props.stats.length">
+        <table 
+            class="stats-table" 
+            v-if="props.stats && props.stats.length"
+            role="presentation"
+            aria-label="Pokemon encounter statistics"
+        >
+            <thead class="sr-only">
+                <tr>
+                    <th scope="col">Statistic</th>
+                    <th scope="col">Value</th>
+                </tr>
+            </thead>
             <tbody>
-                <tr v-for="stat in props.stats" :key="stat.label">
-                    <td class="label">{{ stat.label }}</td>
-                    <td class="value">{{ stat.value }}</td>
+                <tr v-for="stat in props.stats" :key="stat.label" :data-stat="stat.label.toLowerCase()">
+                    <th scope="row" class="label">{{ stat.label }}</th>
+                    <td class="value" :data-label="stat.label">{{ stat.value }}</td>
                 </tr>
             </tbody>
         </table>
@@ -40,6 +51,19 @@ const props = defineProps({
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Screen reader only class for hidden but accessible content */
+:deep(.sr-only) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
 .stats-table tbody tr {
     border-bottom: 1px solid $border-color;
 
@@ -50,6 +74,11 @@ const props = defineProps({
     &:hover {
         background-color: rgba($secondary, 0.05);
         transition: background-color $transition-fast;
+    }
+
+    &:focus-within {
+        outline: 2px solid $secondary;
+        outline-offset: -2px;
     }
 }
 

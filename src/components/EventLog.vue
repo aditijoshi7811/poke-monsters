@@ -7,6 +7,7 @@ const pokemonStore = usePokemonStore();
 const trainerStore = useTrainerStore();
 const displayedText = ref('');
 const isTyping = ref(false);
+const announcementText = ref(''); // Text to announce after typing completes
 let typeInterval = null;
 
 const eventListText = computed(() => {
@@ -26,6 +27,9 @@ watch(
             typeInterval = null;
         }
 
+        // Reset announcement
+        announcementText.value = '';
+
         if (pokemonStore.events.length > 0) {
             const latestMsg = pokemonStore.events[0].message;
             displayedText.value = '';
@@ -39,6 +43,8 @@ watch(
                     index++;
                 } else {
                     isTyping.value = false;
+                    // Only announce after typing completes
+                    announcementText.value = latestMsg;
                     clearInterval(typeInterval);
                     typeInterval = null;
                 }
@@ -50,6 +56,16 @@ watch(
 
 <template>
     <div class="event-log" role="region" aria-label="Event log and game notifications">
+        <!-- Voice-over announcement - always in DOM, content updates after typing completes -->
+        <div
+            class="event-announcement"
+            role="status"
+            aria-live="assertive"
+            aria-atomic="true"
+        >
+            {{ announcementText }}
+        </div>
+
         <div v-if="eventListText" class="event-message">
             {{ eventListText }}
         </div>
@@ -73,6 +89,19 @@ watch(
 
 <style lang="scss" scoped>
 @import '@/styles/variables.scss';
+
+/* Hidden announcement region for screen readers */
+.event-announcement {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
 
 .event-log {
     background-color: $pokemon-white;

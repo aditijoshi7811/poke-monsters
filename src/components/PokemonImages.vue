@@ -17,12 +17,11 @@ defineProps({
             <img
                 v-if="pokemon.sprites?.front_default"
                 :src="pokemon.sprites.front_default"
-                :alt="`${pokemon.name} front view - Generation 1 Pokemon sprite`"
-                :aria-label="`${pokemon.name} Pokemon shown from front`"
+                :alt="`${capitalize(pokemon.name)} - front facing Pokemon sprite`"
                 class="pokemon-img"
                 loading="lazy"
             />
-            <p v-else class="no-image" role="status">
+            <p v-else class="no-image" role="status" aria-live="polite">
                 No front image available for {{ capitalize(pokemon.name) }}
             </p>
         </div>
@@ -32,12 +31,11 @@ defineProps({
             <img
                 v-if="pokemon.sprites?.back_default"
                 :src="pokemon.sprites.back_default"
-                :alt="`${pokemon.name} back view - Generation 1 Pokemon sprite`"
-                :aria-label="`${pokemon.name} Pokemon shown from back`"
+                :alt="`${capitalize(pokemon.name)} - back facing Pokemon sprite`"
                 class="pokemon-img"
                 loading="lazy"
             />
-            <p v-else class="no-image" role="status">
+            <p v-else class="no-image" role="status" aria-live="polite">
                 No back image available for {{ capitalize(pokemon.name) }}
             </p>
         </div>

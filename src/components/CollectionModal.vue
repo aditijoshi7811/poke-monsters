@@ -231,13 +231,16 @@ const allTypes = computed(() => {
                             <button
                                 type="button"
                                 class="sort-btn"
-                                aria-label="Toggle sort menu"
+                                aria-label="Sort options"
+                                aria-haspopup="menu"
+                                :aria-expanded="showSortMenu"
+                                aria-controls="sortDropdown"
                                 @click="toggleSortMenu"
                                 :class="{ active: showSortMenu }"
                             >
                                 ⇅ Sort
                             </button>
-                            <div v-if="showSortMenu" class="sort-dropdown">
+                            <div v-if="showSortMenu" id="sortDropdown" class="sort-dropdown" role="menu">
                                 <button
                                     v-for="col in [
                                         'id',
@@ -249,6 +252,8 @@ const allTypes = computed(() => {
                                     :key="col"
                                     type="button"
                                     class="sort-option"
+                                    role="menuitem"
+                                    :aria-label="`Sort by ${capitalize(col)}, current order: ${sortColumn === col ? sortDirection === 'asc' ? 'ascending' : 'descending' : 'not sorted'}`"
                                     @click="toggleSort(col)"
                                     :class="{ active: sortColumn === col }"
                                 >
@@ -270,6 +275,7 @@ const allTypes = computed(() => {
                             :class="{ active: showFilterPanel }"
                             :aria-expanded="showFilterPanel"
                             aria-controls="filterPanel"
+                            :aria-label="`Filter by type, ${selectedTypes.size} types selected`"
                         >
                             <span class="filter-icon" aria-hidden="true">
                                 <svg
@@ -310,6 +316,11 @@ const allTypes = computed(() => {
                     role="region"
                     aria-labelledby="filterHeading"
                 >
+                    <!-- Live region to announce filter changes -->
+                    <div class="sr-only" role="status" aria-live="polite" aria-atomic="true">
+                        <span v-if="selectedTypes.size === 0">All types shown. No filters applied.</span>
+                        <span v-else>Showing Pokemon with types: {{ Array.from(selectedTypes).join(', ') }}</span>
+                    </div>
                     <div class="filter-content">
                         <h3 id="filterHeading">Filter by Type</h3>
                         <div class="type-checkboxes">
@@ -328,6 +339,7 @@ const allTypes = computed(() => {
                                             type
                                         )
                                     "
+                                    :aria-label="`Filter by ${type} type`"
                                 />
                                 {{ type }}
                             </label>
@@ -344,7 +356,11 @@ const allTypes = computed(() => {
                 </div>
 
                 <div class="modal-body">
-                    <div v-if="totalCaught === 0" class="no-pokemon">
+                    <!-- Live region for sort/filter announcements -->
+                    <div class="sr-only" role="status" aria-live="polite" aria-atomic="true">
+                        <span v-if="totalCaught > 0">Showing {{ uniqueCount }} unique Pokemon out of {{ totalCaught }} caught, sorted by {{ capitalize(sortColumn) }} in {{ sortDirection === 'asc' ? 'ascending' : 'descending' }} order.</span>
+                    </div>
+                    <div v-if="totalCaught === 0" class="no-pokemon" role="status" aria-live="polite">
                         <p>No Pokemon caught yet! Go out and find some!</p>
                     </div>
                     <div v-else class="collection-table-wrapper">
@@ -352,6 +368,7 @@ const allTypes = computed(() => {
                             <thead>
                                 <tr>
                                     <th
+                                        scope="col"
                                         class="sortable"
                                         @click="toggleSort('id')"
                                         @keydown="
@@ -359,13 +376,14 @@ const allTypes = computed(() => {
                                         "
                                         tabindex="0"
                                         role="button"
-                                        aria-label="Sort by ID"
+                                        :aria-label="`Pokemon ID, currently sorted ${sortColumn === 'id' ? 'in ' + sortDirection + ' order' : '(not sorted)'}, press Enter to sort`"
                                     >
                                         ID{{ getSortIndicator('id') }}
                                     </th>
-                                    <th class="cell-number">Number</th>
-                                    <th>Image</th>
+                                    <th scope="col" class="cell-number">Number caught</th>
+                                    <th scope="col">Image</th>
                                     <th
+                                        scope="col"
                                         class="sortable"
                                         @click="toggleSort('name')"
                                         @keydown="
@@ -373,12 +391,13 @@ const allTypes = computed(() => {
                                         "
                                         tabindex="0"
                                         role="button"
-                                        aria-label="Sort by Name"
+                                        :aria-label="`Pokemon Name, currently sorted ${sortColumn === 'name' ? 'in ' + sortDirection + ' order' : '(not sorted)'}, press Enter to sort`"
                                     >
                                         Name{{ getSortIndicator('name') }}
                                     </th>
-                                    <th>Type</th>
+                                    <th scope="col">Type</th>
                                     <th
+                                        scope="col"
                                         class="sortable"
                                         @click="toggleSort('height')"
                                         @keydown="
@@ -389,11 +408,12 @@ const allTypes = computed(() => {
                                         "
                                         tabindex="0"
                                         role="button"
-                                        aria-label="Sort by Height"
+                                        :aria-label="`Pokemon Height, currently sorted ${sortColumn === 'height' ? 'in ' + sortDirection + ' order' : '(not sorted)'}, press Enter to sort`"
                                     >
                                         Height{{ getSortIndicator('height') }}
                                     </th>
                                     <th
+                                        scope="col"
                                         class="sortable"
                                         @click="toggleSort('weight')"
                                         @keydown="
@@ -404,11 +424,12 @@ const allTypes = computed(() => {
                                         "
                                         tabindex="0"
                                         role="button"
-                                        aria-label="Sort by Weight"
+                                        :aria-label="`Pokemon Weight, currently sorted ${sortColumn === 'weight' ? 'in ' + sortDirection + ' order' : '(not sorted)'}, press Enter to sort`"
                                     >
                                         Weight{{ getSortIndicator('weight') }}
                                     </th>
                                     <th
+                                        scope="col"
                                         class="sortable"
                                         @click="toggleSort('speed')"
                                         @keydown="
@@ -416,7 +437,7 @@ const allTypes = computed(() => {
                                         "
                                         tabindex="0"
                                         role="button"
-                                        aria-label="Sort by Speed"
+                                        :aria-label="`Pokemon Speed, currently sorted ${sortColumn === 'speed' ? 'in ' + sortDirection + ' order' : '(not sorted)'}, press Enter to sort`"
                                     >
                                         Speed{{ getSortIndicator('speed') }}
                                     </th>
@@ -427,31 +448,31 @@ const allTypes = computed(() => {
                                     v-for="pokemon in sortedItems"
                                     :key="pokemon.id"
                                 >
-                                    <td class="cell-id">{{ pokemon.id }}</td>
-                                    <td class="cell-number">
+                                    <td class="cell-id" data-label="ID">{{ pokemon.id }}</td>
+                                    <td class="cell-number" data-label="Number caught">
                                         {{ pokemon.count || 1 }}
                                     </td>
-                                    <td class="cell-image">
+                                    <td class="cell-image" data-label="Image">
                                         <img
                                             v-if="pokemon.image"
                                             :src="pokemon.image"
-                                            :alt="`${pokemon.name} sprite`"
+                                            :alt="`${capitalize(pokemon.name)} sprite image`"
                                             class="pokemon-sprite"
                                         />
                                     </td>
-                                    <td class="cell-name">
+                                    <td class="cell-name" data-label="Name">
                                         {{ capitalize(pokemon.name) }}
                                     </td>
-                                    <td class="cell-type">
+                                    <td class="cell-type" data-label="Type">
                                         {{ pokemon.typesDisplay }}
                                     </td>
-                                    <td class="cell-stat">
+                                    <td class="cell-stat" data-label="Height">
                                         {{ pokemon.heightDisplay }}
                                     </td>
-                                    <td class="cell-stat">
+                                    <td class="cell-stat" data-label="Weight">
                                         {{ pokemon.weightDisplay }}
                                     </td>
-                                    <td class="cell-stat">
+                                    <td class="cell-stat" data-label="Speed">
                                         {{ pokemon.speedDisplay }}
                                     </td>
                                 </tr>
@@ -499,6 +520,19 @@ const allTypes = computed(() => {
 
 <style lang="scss" scoped>
 @import '@/styles/variables.scss';
+
+/* Screen reader only content */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
 
 .modal-overlay {
     position: fixed;

@@ -154,6 +154,7 @@ const startGame = async () => {
 
 <template>
     <main
+        id="main-content"
         role="main"
         class="home-view"
         :class="{ 'is-transitioning': isTransitioning }"
@@ -185,7 +186,8 @@ const startGame = async () => {
                     v-model.number="pokemonStore.selectedGeneration"
                     name="generation-select"
                     id="generation-select"
-                    aria-label="Select Pokemon generation"
+                    aria-label="Select Pokemon generation. Press Enter or Space to open the dropdown menu"
+                    aria-describedby="generation-help"
                     @keydown="handleSelectKeydown"
                 >
                     <option
@@ -196,6 +198,7 @@ const startGame = async () => {
                         {{ g.label }}
                     </option>
                 </select>
+                <p id="generation-help" class="sr-only">Choose which generation of Pokemon to encounter. Different generations have different Pokemon available.</p>
 
                 <p
                     v-if="shouldShowError"
@@ -211,8 +214,8 @@ const startGame = async () => {
                 <button
                     @click="startGame"
                     :disabled="isButtonDisabled"
-                    aria-disabled="isButtonDisabled"
-                    aria-label="Start your Pokémon adventure"
+                    :aria-disabled="isButtonDisabled"
+                    :aria-label="isButtonDisabled ? 'Start Adventure - disabled, enter your trainer name first' : 'Start your Pokémon adventure'"
                 >
                     Start Adventure
                 </button>

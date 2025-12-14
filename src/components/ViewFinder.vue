@@ -1,7 +1,7 @@
 <script setup>
 import { usePokemonStore } from '@/stores/pokemonStore';
 import { useTrainerStore } from '@/stores/trainerStore';
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { capitalize } from '@/composables/useStringUtils';
 import { usePokemonAnimation } from '@/composables/usePokemonAnimation';
 import EncounterStats from './EncounterStats.vue';
@@ -9,6 +9,7 @@ import PokemonImages from './PokemonImages.vue';
 
 const pokemonStore = usePokemonStore();
 const trainerStore = useTrainerStore();
+const announcementText = ref('');
 
 // Use the usePokemonAnimation composable to manage animation state
 const { isAnimatingOut, displayPokemon } = usePokemonAnimation(
@@ -47,6 +48,48 @@ const encounterStats = computed(() => {
         }
     ];
 });
+
+/**
+ * Computes a detailed announcement of the encountered Pokémon's stats for screen readers.
+ * This will be read aloud by voice-over when a Pokémon is found.
+ * @return {string} A formatted string with Pokémon name and all stats.
+ */
+const pokemonStatsAnnouncement = computed(() => {
+    if (!displayPokemon.value) return '';
+    const name = capitalize(displayPokemon.value.name);
+    const type = pokemonTypes.value;
+    const height = `${(displayPokemon.value.height / 10).toFixed(1)} m`;
+    const weight = `${(displayPokemon.value.weight / 10).toFixed(1)} kg`;
+    return `${name} encountered. Type: ${type}. Height: ${height}. Weight: ${weight}.`;
+});
+
+/**
+ * Watch for animation completion to announce stats
+ */
+watch(
+    () => isAnimatingOut.value,
+    (animatingOut) => {
+        if (!animatingOut && displayPokemon.value) {
+            // Animation completed, announce stats
+            announcementText.value = pokemonStatsAnnouncement.value;
+        } else if (animatingOut) {
+            // Animation starting, clear announcement
+            announcementText.value = '';
+        }
+    }
+);
+
+/**
+ * Clear announcement when Pokemon is dismissed
+ */
+watch(
+    () => displayPokemon.value,
+    (newPokemon) => {
+        if (!newPokemon) {
+            announcementText.value = '';
+        }
+    }
+);
 </script>
 
 <template>
@@ -55,6 +98,16 @@ const encounterStats = computed(() => {
         role="region"
         aria-label="Pokemon encounter display"
     >
+        <!-- Announcement region for voice-over - always in DOM, content controlled by watchers -->
+        <div
+            class="pokemon-announcement"
+            role="status"
+            aria-live="assertive"
+            aria-atomic="true"
+        >
+            {{ announcementText }}
+        </div>
+
         <div
             v-if="displayPokemon"
             :class="['pokemon-container', { 'animate-out': isAnimatingOut }]"
@@ -78,6 +131,19 @@ const encounterStats = computed(() => {
     box-shadow: $shadow-md;
     border: 3px solid $secondary;
     min-height: 300px;
+}
+
+/* Hidden announcement region for screen readers - keeps it in accessibility tree */
+.pokemon-announcement {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
 }
 
 .pokemon-container {

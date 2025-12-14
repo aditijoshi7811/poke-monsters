@@ -101,7 +101,7 @@ const cancelQuit = () => {
 </script>
 
 <template>
-    <main class="capture-view">
+    <main id="main-content" class="capture-view">
         <header class="capture-header">
             <h1>Welcome {{ trainerStore.trainerName }}</h1>
         </header>
