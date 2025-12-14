@@ -2,12 +2,14 @@
 import { usePokemonStore } from '@/stores/pokemonStore';
 import { useTrainerStore } from '@/stores/trainerStore';
 import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { capitalize } from '@/composables/useStringUtils';
 import { usePokemonCatchMechanic } from '@/composables/usePokemonCatchMechanic';
 import { useRandomPokemon } from '@/composables/useRandomPokemon';
 
 const pokemonStore = usePokemonStore();
 const trainerStore = useTrainerStore();
+const { t } = useI18n();
 
 const emit = defineEmits(['open-collection', 'catch-success', 'quit-game']);
 
@@ -50,10 +52,10 @@ const handleFind = async () => {
             pokemonStore.selectedGeneration
         );
         if (pokemon)
-            pokemonStore.addEvent(`${capitalize(pokemon.name)} appeared!`);
+            pokemonStore.addEvent(t('gameEvents.pokemonAppeared', { name: capitalize(pokemon.name) }));
         isFindingPokemon.value = false;
     } catch (err) {
-        pokemonStore.addEvent('Error finding Pokemon. Try again!');
+        pokemonStore.addEvent(t('gameEvents.randomError'));
         isFindingPokemon.value = false;
     }
 };
@@ -79,7 +81,10 @@ const handleThrow = async () => {
     if (!currentPokemon) return;
 
     pokemonStore.addEvent(
-        `${trainerStore.trainerName} throws ball at ${capitalize(currentPokemon.name)}!`
+        t('gameEvents.throwBall', { 
+            trainerName: trainerStore.trainerName, 
+            pokemonName: capitalize(currentPokemon.name) 
+        })
     );
     await attemptThrow();
 };
@@ -91,14 +96,14 @@ const quitGame = () => emit('quit-game');
 <template>
     <form id="form-controls" @submit.prevent>
         <fieldset>
-            <legend>Controls</legend>
+            <legend>{{ t('controls.legend') }}</legend>
             <button
                 type="button"
                 name="btn-find"
                 @click="handleFind"
                 :disabled="hasPokemon"
                 :aria-busy="fetchLoading"
-                :aria-label="fetchLoading ? 'Finding Pokemon, please wait' : 'Find a random Pokemon'"
+                :aria-label="fetchLoading ? t('controls.findButtonLoading') : t('controls.findButton')"
             >
                 Find
             </button>
@@ -107,7 +112,7 @@ const quitGame = () => emit('quit-game');
                 name="btn-ignore"
                 @click="handleIgnore"
                 :disabled="!hasPokemon"
-                aria-label="Ignore current Pokemon and clear the viewfinder"
+                :aria-label="t('controls.ignoreButton')"
             >
                 Ignore
             </button>
@@ -116,7 +121,7 @@ const quitGame = () => emit('quit-game');
                 name="btn-throw"
                 @click="handleThrow"
                 :disabled="!hasPokemon"
-                aria-label="Throw Poke Ball at current Pokemon to catch it"
+                :aria-label="t('controls.throwButton')"
             >
                 Throw
             </button>
@@ -125,16 +130,16 @@ const quitGame = () => emit('quit-game');
                 type="button"
                 name="btn-collection"
                 @click.prevent="showCollectionView"
-                :aria-label="`Open Pokédex, ${uniqueCount} unique Pokemon caught`"
+                :aria-label="t('controls.pokedexButton', { count: uniqueCount })"
             >
-                Pokedex <span class="pokedex-badge" aria-hidden="true">({{ uniqueCount }})</span>
+                Pokedex <span class="pokedex-badge" aria-hidden="true">{{ t('controls.pokedexBadge', { count: uniqueCount }) }}</span>
             </button>
 
             <button 
                 type="button" 
                 name="btn-quit" 
                 @click.prevent="quitGame"
-                aria-label="Quit game and return to title screen"
+                :aria-label="t('controls.quitButton')"
             >
                 Quit
             </button>

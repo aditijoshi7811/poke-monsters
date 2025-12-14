@@ -1,4 +1,10 @@
 <script setup>
+import { useI18n } from 'vue-i18n';
+import { ref } from 'vue';
+
+const { t } = useI18n();
+const tableRef = ref(null);
+
 const props = defineProps({
     stats: {
         type: Array,
@@ -6,24 +12,52 @@ const props = defineProps({
         default: () => []
     }
 });
+
+/**
+ * Handle arrow key navigation within the stats table
+ */
+const handleTableNavigation = (e) => {
+    if (!tableRef.value) return;
+
+    const tableRows = Array.from(tableRef.value.querySelectorAll('tbody tr'));
+    const currentRow = e.target.closest('tr');
+    const currentIndex = tableRows.indexOf(currentRow);
+
+    if (e.key === 'ArrowDown' && currentIndex < tableRows.length - 1) {
+        e.preventDefault();
+        tableRows[currentIndex + 1].focus();
+    } else if (e.key === 'ArrowUp' && currentIndex > 0) {
+        e.preventDefault();
+        tableRows[currentIndex - 1].focus();
+    }
+};
 </script>
 
 <template>
     <div class="pokemon-stats">
         <table 
+            ref="tableRef"
             class="stats-table" 
             v-if="props.stats && props.stats.length"
-            role="presentation"
-            aria-label="Pokemon encounter statistics"
+            role="grid"
+            :aria-label="t('viewFinder.statsLabel')"
         >
             <thead class="sr-only">
                 <tr>
-                    <th scope="col">Statistic</th>
+                    <th scope="col">{{ t('accessibility.filterPanelAriaLabel') }}</th>
                     <th scope="col">Value</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="stat in props.stats" :key="stat.label" :data-stat="stat.label.toLowerCase()">
+                <tr 
+                    v-for="(stat, index) in props.stats" 
+                    :key="stat.label" 
+                    :data-stat="stat.label.toLowerCase()"
+                    tabindex="0"
+                    role="row"
+                    :aria-rowindex="index + 2"
+                    @keydown="handleTableNavigation"
+                >
                     <th scope="row" class="label">{{ stat.label }}</th>
                     <td class="value" :data-label="stat.label">{{ stat.value }}</td>
                 </tr>
@@ -66,6 +100,9 @@ const props = defineProps({
 
 .stats-table tbody tr {
     border-bottom: 1px solid $border-color;
+    transition: background-color $transition-fast;
+    outline: 2px solid transparent;
+    outline-offset: -2px;
 
     &:last-child {
         border-bottom: none;
@@ -73,12 +110,19 @@ const props = defineProps({
 
     &:hover {
         background-color: rgba($secondary, 0.05);
-        transition: background-color $transition-fast;
     }
 
-    &:focus-within {
-        outline: 2px solid $secondary;
-        outline-offset: -2px;
+    &:focus {
+        background-color: rgba($secondary, 0.1);
+    }
+
+    &:focus-visible {
+        background-color: rgba($secondary, 0.15);
+        box-shadow: inset 0 0 0 2px rgba($secondary, 0.2);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
     }
 }
 

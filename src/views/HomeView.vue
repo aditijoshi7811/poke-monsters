@@ -3,10 +3,12 @@ import { ref, onMounted, computed, watch } from 'vue';
 import { usePokemonStore } from '@/stores/pokemonStore';
 import { useRouter } from 'vue-router';
 import { useTrainerStore } from '@/stores/trainerStore';
+import { useI18n } from 'vue-i18n';
 
 const router = useRouter();
 const trainerStore = useTrainerStore();
 const pokemonStore = usePokemonStore();
+const { t } = useI18n();
 const isTransitioning = ref(false);
 const trainerName = ref('');
 const inputTrainerName = ref('');
@@ -34,7 +36,7 @@ onMounted(() => {
     }
     // Fetch available generations for the dropdown
     pokemonStore.fetchGenerations().catch((err) => {
-        alert('Failed to load Pokémon generations. Please try again.');
+        alert(t('home.loadError'));
         console.error(err);
     });
 });
@@ -79,7 +81,7 @@ const generationOptions = computed(() => {
         .map((g) => {
             const parts = g.url ? g.url.split('/').filter(Boolean) : [];
             const id = parts.length ? Number(parts[parts.length - 1]) : null;
-            return { value: id, label: `Generation ${id}` };
+            return { value: id, label: t('home.generationOption', { id }) };
         })
         .filter((o) => o.value != null);
 });
@@ -161,32 +163,32 @@ const startGame = async () => {
     >
         <div class="container">
             <h1>
-                Welcome {{ isTransitioning ? inputTrainerName : 'Trainer' }}
+                {{ t(isTransitioning ? 'capture.headerTitle' : 'home.welcomeTitleDefault', { name: isTransitioning ? inputTrainerName : 'Trainer' }) }}
             </h1>
 
             <form id="form-registration" @submit.prevent="submit">
-                <label for="trainer-name">Enter Your Trainer Name:</label>
+                <label for="trainer-name">{{ t('home.trainerNameLabel') }}</label>
                 <input
                     ref="inputRef"
                     type="text"
                     name="trainer-name"
                     id="trainer-name"
-                    placeholder="Your name"
+                    :placeholder="t('home.trainerNamePlaceholder')"
                     required
                     aria-required="true"
-                    aria-label="Trainer Name"
+                    :aria-label="t('home.trainerNameAriaLabel')"
                     aria-describedby="name-error name-help"
                     v-model="trainerName"
                     @input="handleInputInteraction"
                 />
 
-                <label for="generation-select">Select Generation</label>
+                <label for="generation-select">{{ t('home.generationSelectLabel') }}</label>
                 <select
                     ref="selectRef"
                     v-model.number="pokemonStore.selectedGeneration"
                     name="generation-select"
                     id="generation-select"
-                    aria-label="Select Pokemon generation. Press Enter or Space to open the dropdown menu"
+                    :aria-label="t('home.generationSelectAriaLabel')"
                     aria-describedby="generation-help"
                     @keydown="handleSelectKeydown"
                 >
@@ -198,7 +200,7 @@ const startGame = async () => {
                         {{ g.label }}
                     </option>
                 </select>
-                <p id="generation-help" class="sr-only">Choose which generation of Pokemon to encounter. Different generations have different Pokemon available.</p>
+                <p id="generation-help" class="sr-only">{{ t('home.generationSelectHelpText') }}</p>
 
                 <p
                     v-if="shouldShowError"
@@ -208,16 +210,16 @@ const startGame = async () => {
                     aria-live="assertive"
                     aria-atomic="true"
                 >
-                    Please enter your trainer name to begin your adventure
+                    {{ t('home.errorMessage') }}
                 </p>
 
                 <button
                     @click="startGame"
                     :disabled="isButtonDisabled"
                     :aria-disabled="isButtonDisabled"
-                    :aria-label="isButtonDisabled ? 'Start Adventure - disabled, enter your trainer name first' : 'Start your Pokémon adventure'"
+                    :aria-label="isButtonDisabled ? t('home.startButtonDisabledLabel') : t('home.startButtonLabel')"
                 >
-                    Start Adventure
+                    {{ t('home.startButtonText') }}
                 </button>
             </form>
         </div>

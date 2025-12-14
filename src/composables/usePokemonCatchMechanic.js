@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import { capitalize } from './useStringUtils';
+import { useI18n } from 'vue-i18n';
 
 /**
  * Composable for managing the Pokémon catch mechanic.
@@ -13,6 +14,7 @@ export function usePokemonCatchMechanic(
     pokemonStore,
     emitFn = () => {}
 ) {
+    const { t } = useI18n();
     const failureCount = ref(0);
     const isLoading = ref(false);
     const successRate = 2 / 3; // 66.67%
@@ -28,7 +30,7 @@ export function usePokemonCatchMechanic(
                 // Success
                 trainerStore.addCaughtPokemon(current);
                 pokemonStore.addEvent(
-                    `Success! ${capitalize(current.name)} was caught!`
+                    t('gameEvents.catchSuccess', { name: capitalize(current.name) })
                 );
                 emitFn('catch-success', capitalize(current.name));
                 pokemonStore.currentPokemon = null;
@@ -37,12 +39,12 @@ export function usePokemonCatchMechanic(
                 // Failure
                 failureCount.value++;
                 pokemonStore.addEvent(
-                    ` Failed to catch ${capitalize(current.name)}.You can try again!`
+                    t('gameEvents.catchFailure', { name: capitalize(current.name) })
                 );
 
                 if (failureCount.value >= 2) {
                     pokemonStore.addEvent(
-                        `${capitalize(current.name)} ran away!`
+                        t('gameEvents.pokemonRanAway', { name: capitalize(current.name) })
                     );
                     pokemonStore.currentPokemon = null;
                     failureCount.value = 0;

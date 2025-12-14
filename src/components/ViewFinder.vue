@@ -2,6 +2,7 @@
 import { usePokemonStore } from '@/stores/pokemonStore';
 import { useTrainerStore } from '@/stores/trainerStore';
 import { computed, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { capitalize } from '@/composables/useStringUtils';
 import { usePokemonAnimation } from '@/composables/usePokemonAnimation';
 import EncounterStats from './EncounterStats.vue';
@@ -9,7 +10,50 @@ import PokemonImages from './PokemonImages.vue';
 
 const pokemonStore = usePokemonStore();
 const trainerStore = useTrainerStore();
+const { t } = useI18n();
 const announcementText = ref('');
+const pokemonImagesRef = ref(null);
+const encounterStatsRef = ref(null);
+
+/**
+ * Handle Tab/Shift+Tab navigation between images and stats sections
+ * Also handles arrow keys for vertical navigation
+ */
+const handleSectionNavigation = (e) => {
+    const sections = [pokemonImagesRef.value, encounterStatsRef.value].filter(Boolean);
+    const currentFocused = document.activeElement;
+    const currentIndex = sections.findIndex(
+        (section) => section === currentFocused || section?.contains(currentFocused)
+    );
+
+    if (e.key === 'Tab') {
+        if (e.shiftKey) {
+            // Shift+Tab - move to previous section
+            if (currentIndex === 1) {
+                e.preventDefault();
+                pokemonImagesRef.value?.focus();
+            }
+        } else {
+            // Tab - move to next section
+            if (currentIndex === 0) {
+                e.preventDefault();
+                encounterStatsRef.value?.focus();
+            }
+        }
+    } else if (e.key === 'ArrowDown' && currentIndex !== -1) {
+        // Arrow Down - move to next section
+        if (currentIndex === 0) {
+            e.preventDefault();
+            encounterStatsRef.value?.focus();
+        }
+    } else if (e.key === 'ArrowUp' && currentIndex !== -1) {
+        // Arrow Up - move to previous section
+        if (currentIndex === 1) {
+            e.preventDefault();
+            pokemonImagesRef.value?.focus();
+        }
+    }
+};
 
 // Use the usePokemonAnimation composable to manage animation state
 const { isAnimatingOut, displayPokemon } = usePokemonAnimation(
@@ -60,7 +104,7 @@ const pokemonStatsAnnouncement = computed(() => {
     const type = pokemonTypes.value;
     const height = `${(displayPokemon.value.height / 10).toFixed(1)} m`;
     const weight = `${(displayPokemon.value.weight / 10).toFixed(1)} kg`;
-    return `${name} encountered. Type: ${type}. Height: ${height}. Weight: ${weight}.`;
+    return `${name} ${t('viewFinder.encounterAnnouncementPrefix')}${type}. ${t('viewFinder.encounterAnnouncementHeight')}${height}. ${t('viewFinder.encounterAnnouncementWeight')}${weight}.`;
 });
 
 /**
@@ -96,7 +140,7 @@ watch(
     <div
         class="pokemon-display"
         role="region"
-        aria-label="Pokemon encounter display"
+        :aria-label="t('viewFinder.regionLabel')"
     >
         <!-- Announcement region for voice-over - always in DOM, content controlled by watchers -->
         <div
@@ -111,13 +155,14 @@ watch(
         <div
             v-if="displayPokemon"
             :class="['pokemon-container', { 'animate-out': isAnimatingOut }]"
+            @keydown="handleSectionNavigation"
         >
             <PokemonImages :pokemon="displayPokemon" />
 
             <EncounterStats :stats="encounterStats" />
         </div>
         <div v-else class="no-pokemon">
-            <p>Click "Find" to encounter a Pokemon!</p>
+            <p>{{ t('viewFinder.noPokedexMessage') }}</p>
         </div>
     </div>
 </template>

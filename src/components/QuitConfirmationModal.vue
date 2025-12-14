@@ -1,5 +1,8 @@
 <script setup>
+import { useI18n } from 'vue-i18n';
 import { useModalEscapeKey } from '@/composables/useModalEscapeKey';
+
+const { t } = useI18n();
 
 const props = defineProps({
     isOpen: {
@@ -37,22 +40,22 @@ useModalEscapeKey(
 <template>
     <div v-if="isOpen" class="modal-overlay" @click="handleCancel">
         <div class="quit-modal" @click.stop tabindex="-1">
-            <h2>Are you sure?</h2>
-            <p>Do you want to quit the game and return to the title screen?</p>
+            <h2>{{ t('modals.quitConfirmation.title') }}</h2>
+            <p>{{ t('modals.quitConfirmation.description') }}</p>
             <div class="modal-actions">
                 <button
                     class="btn-yes"
                     @click="handleConfirm"
-                    aria-label="Yes, quit the game"
+                    :aria-label="t('modals.quitConfirmation.confirmButton')"
                 >
-                    Yes
+                    {{ t('modals.quitConfirmation.confirmButtonText') }}
                 </button>
                 <button
                     class="btn-no"
                     @click="handleCancel"
-                    aria-label="No, continue playing"
+                    :aria-label="t('modals.quitConfirmation.cancelButton')"
                 >
-                    No
+                    {{ t('modals.quitConfirmation.cancelButtonText') }}
                 </button>
             </div>
         </div>

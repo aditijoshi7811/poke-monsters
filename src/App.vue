@@ -1,11 +1,14 @@
 <script setup>
 import { RouterView } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import '@/styles/global.scss';
+
+const { t } = useI18n();
 </script>
 
 <template>
     <!-- Skip to main content link - visible for screen readers, shown on focus -->
-    <a href="#main-content" class="skip-to-main">Skip to main content</a>
+    <a href="#main-content" class="skip-to-main">{{ t('common.skipToMainContent') }}</a>
     <RouterView />
 </template>
 

@@ -2,6 +2,7 @@
 import { useTrainerStore } from '@/stores/trainerStore';
 import { usePokemonStore } from '@/stores/pokemonStore';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { ref } from 'vue';
 import { useSuccessAnimation } from '@/composables/useSuccessAnimation';
 import GameControls from '@/components/GameControls.vue';
@@ -14,6 +15,7 @@ import { onMounted } from 'vue';
 const trainerStore = useTrainerStore();
 const pokemonStore = usePokemonStore();
 const router = useRouter();
+const { t } = useI18n();
 const isCollectionModalOpen = ref(false);
 const showQuitConfirmation = ref(false);
 
@@ -35,7 +37,7 @@ onMounted(async () => {
         );
     } catch (err) {
         // show error in store so user can see it in event log
-        alert('Failed to load Pokémon generation. Please try again.');
+        alert(t('gameEvents.generationLoadError'));
         return;
     }
 });
@@ -103,7 +105,7 @@ const cancelQuit = () => {
 <template>
     <main id="main-content" class="capture-view">
         <header class="capture-header">
-            <h1>Welcome {{ trainerStore.trainerName }}</h1>
+            <h1>{{ t('capture.headerTitle', { name: trainerStore.trainerName }) }}</h1>
         </header>
 
         <section class="capture-content">
@@ -120,7 +122,7 @@ const cancelQuit = () => {
         <div v-if="showCatchSuccess" class="catch-success-overlay">
             <div class="catch-success-animation">
                 <div class="success-icon">✨</div>
-                <div class="success-text">Caught {{ caughtPokemonName }}!</div>
+                <div class="success-text">{{ t('capture.caughtMessage', { name: caughtPokemonName }) }}</div>
                 <div class="success-sparkles">
                     <span class="sparkle"></span>
                     <span class="sparkle"></span>

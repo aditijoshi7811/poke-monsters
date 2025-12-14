@@ -1,6 +1,7 @@
 <script setup>
 import { useTrainerStore } from '@/stores/trainerStore';
 import { computed, ref, watch, onUnmounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { capitalize } from '@/composables/useStringUtils';
 import { useSortable } from '@/composables/useSortable';
 import { useFilterable } from '@/composables/useFilterable';
@@ -16,6 +17,7 @@ const props = defineProps({
 const emit = defineEmits(['close']);
 
 const trainerStore = useTrainerStore();
+const { t } = useI18n();
 
 // Sort menu state
 const showSortMenu = ref(false);
@@ -220,18 +222,18 @@ const allTypes = computed(() => {
                 class="modal-content"
                 role="dialog"
                 aria-modal="true"
-                aria-labelledby="pokedexTitle"
+                :aria-labelledby="t('modals.pokedex.title')"
                 tabindex="-1"
                 @click.stop
             >
                 <div class="modal-header">
-                    <h2 id="pokedexTitle">My Pokédex</h2>
+                    <h2 :id="t('modals.pokedex.title')">{{ t('modals.pokedex.title') }}</h2>
                     <div class="header-actions">
                         <div class="sort-menu-wrapper">
                             <button
                                 type="button"
                                 class="sort-btn"
-                                aria-label="Sort options"
+                                :aria-label="t('modals.pokedex.sortLabel')"
                                 aria-haspopup="menu"
                                 :aria-expanded="showSortMenu"
                                 aria-controls="sortDropdown"
@@ -253,7 +255,7 @@ const allTypes = computed(() => {
                                     type="button"
                                     class="sort-option"
                                     role="menuitem"
-                                    :aria-label="`Sort by ${capitalize(col)}, current order: ${sortColumn === col ? sortDirection === 'asc' ? 'ascending' : 'descending' : 'not sorted'}`"
+                                    :aria-label="t(`modals.pokedex.sortBy${capitalize(col)}Label`, { order: sortColumn === col ? t('modals.pokedex.sort' + (sortDirection === 'asc' ? 'Ascending' : 'Descending')) : t('modals.pokedex.sortNotSorted') })"
                                     @click="toggleSort(col)"
                                     :class="{ active: sortColumn === col }"
                                 >
@@ -275,7 +277,7 @@ const allTypes = computed(() => {
                             :class="{ active: showFilterPanel }"
                             :aria-expanded="showFilterPanel"
                             aria-controls="filterPanel"
-                            :aria-label="`Filter by type, ${selectedTypes.size} types selected`"
+                            :aria-label="selectedTypes.size > 0 ? t('modals.pokedex.filterLabel', { count: selectedTypes.size }) : t('modals.pokedex.filterLabelNoTypes')"
                         >
                             <span class="filter-icon" aria-hidden="true">
                                 <svg
@@ -296,11 +298,11 @@ const allTypes = computed(() => {
                                     />
                                 </svg>
                             </span>
-                            Filter by Type
+                            {{ t('modals.pokedex.filterLabel', { count: selectedTypes.size }) }}
                         </button>
                         <button
                             type="button"
-                            aria-label="Close modal"
+                            :aria-label="t('modals.pokedex.closeButton')"
                             class="close-btn"
                             @click="closeModal"
                         >
@@ -314,15 +316,15 @@ const allTypes = computed(() => {
                     id="filterPanel"
                     class="filter-panel"
                     role="region"
-                    aria-labelledby="filterHeading"
+                    :aria-labelledby="`${t('modals.pokedex.filterHeading')}-heading`"
                 >
                     <!-- Live region to announce filter changes -->
                     <div class="sr-only" role="status" aria-live="polite" aria-atomic="true">
-                        <span v-if="selectedTypes.size === 0">All types shown. No filters applied.</span>
-                        <span v-else>Showing Pokemon with types: {{ Array.from(selectedTypes).join(', ') }}</span>
+                        <span v-if="selectedTypes.size === 0">{{ t('modals.pokedex.noFiltersApplied') }}</span>
+                        <span v-else>{{ t('modals.pokedex.filterStatus', { types: Array.from(selectedTypes).join(', ') }) }}</span>
                     </div>
                     <div class="filter-content">
-                        <h3 id="filterHeading">Filter by Type</h3>
+                        <h3 :id="`${t('modals.pokedex.filterHeading')}-heading`">{{ t('modals.pokedex.filterHeading') }}</h3>
                         <div class="type-checkboxes">
                             <label
                                 v-for="type in allTypes"
@@ -339,7 +341,7 @@ const allTypes = computed(() => {
                                             type
                                         )
                                     "
-                                    :aria-label="`Filter by ${type} type`"
+                                    :aria-label="t('modals.pokedex.filterByTypeLabel', { type })"
                                 />
                                 {{ type }}
                             </label>
@@ -350,7 +352,7 @@ const allTypes = computed(() => {
                             class="clear-btn"
                             @click="clearFilters"
                         >
-                            Clear Filters
+                            {{ t('modals.pokedex.clearFiltersButton') }}
                         </button>
                     </div>
                 </div>
@@ -358,10 +360,10 @@ const allTypes = computed(() => {
                 <div class="modal-body">
                     <!-- Live region for sort/filter announcements -->
                     <div class="sr-only" role="status" aria-live="polite" aria-atomic="true">
-                        <span v-if="totalCaught > 0">Showing {{ uniqueCount }} unique Pokemon out of {{ totalCaught }} caught, sorted by {{ capitalize(sortColumn) }} in {{ sortDirection === 'asc' ? 'ascending' : 'descending' }} order.</span>
+                        <span v-if="totalCaught > 0">{{ t('modals.pokedex.tableSummary', { uniqueCount: uniqueCount, totalCount: totalCaught, sortColumn: capitalize(sortColumn), sortOrder: sortDirection === 'asc' ? t('modals.pokedex.sortOrderAscending') : t('modals.pokedex.sortOrderDescending') }) }}</span>
                     </div>
                     <div v-if="totalCaught === 0" class="no-pokemon" role="status" aria-live="polite">
-                        <p>No Pokemon caught yet! Go out and find some!</p>
+                        <p>{{ t('modals.pokedex.noPokedexMessage') }}</p>
                     </div>
                     <div v-else class="collection-table-wrapper">
                         <table class="collection-table">
@@ -376,12 +378,12 @@ const allTypes = computed(() => {
                                         "
                                         tabindex="0"
                                         role="button"
-                                        :aria-label="`Pokemon ID, currently sorted ${sortColumn === 'id' ? 'in ' + sortDirection + ' order' : '(not sorted)'}, press Enter to sort`"
+                                        :aria-label="t('modals.pokedex.tableIdHeader', { sortStatus: sortColumn === 'id' ? t('modals.pokedex.sort' + (sortDirection === 'asc' ? 'Ascending' : 'Descending')) : t('modals.pokedex.sortNotSorted') })"
                                     >
-                                        ID{{ getSortIndicator('id') }}
+                                        {{ t('modals.pokedex.tableIdColumn') }}{{ getSortIndicator('id') }}
                                     </th>
-                                    <th scope="col" class="cell-number">Number caught</th>
-                                    <th scope="col">Image</th>
+                                    <th scope="col" class="cell-number">{{ t('modals.pokedex.tableNumberColumn') }}</th>
+                                    <th scope="col">{{ t('modals.pokedex.tableImageColumn') }}</th>
                                     <th
                                         scope="col"
                                         class="sortable"
@@ -391,11 +393,11 @@ const allTypes = computed(() => {
                                         "
                                         tabindex="0"
                                         role="button"
-                                        :aria-label="`Pokemon Name, currently sorted ${sortColumn === 'name' ? 'in ' + sortDirection + ' order' : '(not sorted)'}, press Enter to sort`"
+                                        :aria-label="t('modals.pokedex.tableNameHeader', { sortStatus: sortColumn === 'name' ? t('modals.pokedex.sort' + (sortDirection === 'asc' ? 'Ascending' : 'Descending')) : t('modals.pokedex.sortNotSorted') })"
                                     >
-                                        Name{{ getSortIndicator('name') }}
+                                        {{ t('modals.pokedex.tableNameColumn') }}{{ getSortIndicator('name') }}
                                     </th>
-                                    <th scope="col">Type</th>
+                                    <th scope="col">{{ t('modals.pokedex.tableTypeColumn') }}</th>
                                     <th
                                         scope="col"
                                         class="sortable"
@@ -408,9 +410,9 @@ const allTypes = computed(() => {
                                         "
                                         tabindex="0"
                                         role="button"
-                                        :aria-label="`Pokemon Height, currently sorted ${sortColumn === 'height' ? 'in ' + sortDirection + ' order' : '(not sorted)'}, press Enter to sort`"
+                                        :aria-label="t('modals.pokedex.tableHeightHeader', { sortStatus: sortColumn === 'height' ? t('modals.pokedex.sort' + (sortDirection === 'asc' ? 'Ascending' : 'Descending')) : t('modals.pokedex.sortNotSorted') })"
                                     >
-                                        Height{{ getSortIndicator('height') }}
+                                        {{ t('modals.pokedex.tableHeightColumn') }}{{ getSortIndicator('height') }}
                                     </th>
                                     <th
                                         scope="col"
@@ -424,9 +426,9 @@ const allTypes = computed(() => {
                                         "
                                         tabindex="0"
                                         role="button"
-                                        :aria-label="`Pokemon Weight, currently sorted ${sortColumn === 'weight' ? 'in ' + sortDirection + ' order' : '(not sorted)'}, press Enter to sort`"
+                                        :aria-label="t('modals.pokedex.tableWeightHeader', { sortStatus: sortColumn === 'weight' ? t('modals.pokedex.sort' + (sortDirection === 'asc' ? 'Ascending' : 'Descending')) : t('modals.pokedex.sortNotSorted') })"
                                     >
-                                        Weight{{ getSortIndicator('weight') }}
+                                        {{ t('modals.pokedex.tableWeightColumn') }}{{ getSortIndicator('weight') }}
                                     </th>
                                     <th
                                         scope="col"
@@ -437,9 +439,9 @@ const allTypes = computed(() => {
                                         "
                                         tabindex="0"
                                         role="button"
-                                        :aria-label="`Pokemon Speed, currently sorted ${sortColumn === 'speed' ? 'in ' + sortDirection + ' order' : '(not sorted)'}, press Enter to sort`"
+                                        :aria-label="t('modals.pokedex.tableSpeedHeader', { sortStatus: sortColumn === 'speed' ? t('modals.pokedex.sort' + (sortDirection === 'asc' ? 'Ascending' : 'Descending')) : t('modals.pokedex.sortNotSorted') })"
                                     >
-                                        Speed{{ getSortIndicator('speed') }}
+                                        {{ t('modals.pokedex.tableSpeedColumn') }}{{ getSortIndicator('speed') }}
                                     </th>
                                 </tr>
                             </thead>
@@ -448,31 +450,31 @@ const allTypes = computed(() => {
                                     v-for="pokemon in sortedItems"
                                     :key="pokemon.id"
                                 >
-                                    <td class="cell-id" data-label="ID">{{ pokemon.id }}</td>
-                                    <td class="cell-number" data-label="Number caught">
+                                    <td class="cell-id" :data-label="t('modals.pokedex.mobileIdLabel')">{{ pokemon.id }}</td>
+                                    <td class="cell-number" :data-label="t('modals.pokedex.mobileNumberLabel')">
                                         {{ pokemon.count || 1 }}
                                     </td>
-                                    <td class="cell-image" data-label="Image">
+                                    <td class="cell-image" :data-label="t('modals.pokedex.mobileImageLabel')">
                                         <img
                                             v-if="pokemon.image"
                                             :src="pokemon.image"
-                                            :alt="`${capitalize(pokemon.name)} sprite image`"
+                                            :alt="t('modals.pokedex.tableImageAltText', { name: capitalize(pokemon.name) })"
                                             class="pokemon-sprite"
                                         />
                                     </td>
-                                    <td class="cell-name" data-label="Name">
+                                    <td class="cell-name" :data-label="t('modals.pokedex.mobileNameLabel')">
                                         {{ capitalize(pokemon.name) }}
                                     </td>
-                                    <td class="cell-type" data-label="Type">
+                                    <td class="cell-type" :data-label="t('modals.pokedex.mobileTypeLabel')">
                                         {{ pokemon.typesDisplay }}
                                     </td>
-                                    <td class="cell-stat" data-label="Height">
+                                    <td class="cell-stat" :data-label="t('modals.pokedex.mobileHeightLabel')">
                                         {{ pokemon.heightDisplay }}
                                     </td>
-                                    <td class="cell-stat" data-label="Weight">
+                                    <td class="cell-stat" :data-label="t('modals.pokedex.mobileWeightLabel')">
                                         {{ pokemon.weightDisplay }}
                                     </td>
-                                    <td class="cell-stat" data-label="Speed">
+                                    <td class="cell-stat" :data-label="t('modals.pokedex.mobileSpeedLabel')">
                                         {{ pokemon.speedDisplay }}
                                     </td>
                                 </tr>
@@ -489,24 +491,24 @@ const allTypes = computed(() => {
                     >
                         <span
                             class="thin-badge"
-                            :aria-label="`Unique Pokémon currently shown: ${uniqueCount}`"
+                            :aria-label="t('modals.pokedex.footerUniqueLabel', { count: uniqueCount })"
                         >
                             <span class="sr-only"
-                                >Unique Pokémon currently shown:
+                                >{{ t('modals.pokedex.footerUniqueLabel', { count: uniqueCount }) }}
                             </span>
-                            <span aria-hidden="true">Unique shown:</span>
+                            <span aria-hidden="true">{{ t('modals.pokedex.footerUniqueVisualLabel') }}</span>
                             <strong aria-hidden="true">{{
                                 uniqueCount
                             }}</strong>
                         </span>
                         <span
                             class="thin-badge"
-                            :aria-label="`Total Pokémon captured: ${displayedTotalCaptured}`"
+                            :aria-label="t('modals.pokedex.footerTotalLabel', { count: displayedTotalCaptured })"
                         >
                             <span class="sr-only"
-                                >Total Pokémon captured:
+                                >{{ t('modals.pokedex.footerTotalLabel', { count: displayedTotalCaptured }) }}
                             </span>
-                            <span aria-hidden="true">Total:</span>
+                            <span aria-hidden="true">{{ t('modals.pokedex.footerTotalVisualLabel') }}</span>
                             <strong aria-hidden="true">{{
                                 displayedTotalCaptured
                             }}</strong>

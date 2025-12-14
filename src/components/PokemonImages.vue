@@ -1,5 +1,24 @@
 <script setup>
+import { useI18n } from 'vue-i18n';
+import { ref } from 'vue';
 import { capitalize } from '@/composables/useStringUtils';
+
+const { t } = useI18n();
+const frontImageRef = ref(null);
+const backImageRef = ref(null);
+
+/**
+ * Handle arrow key navigation between front and back images
+ */
+const handleImageNavigation = (e) => {
+    if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        backImageRef.value?.focus();
+    } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        frontImageRef.value?.focus();
+    }
+};
 
 defineProps({
     pokemon: {
@@ -13,30 +32,48 @@ defineProps({
 <template>
     <div class="pokemon-images">
         <div class="image-container">
-            <h3>Front View</h3>
-            <img
+            <h3>{{ t('viewFinder.frontViewLabel') }}</h3>
+            <button
                 v-if="pokemon.sprites?.front_default"
-                :src="pokemon.sprites.front_default"
-                :alt="`${capitalize(pokemon.name)} - front facing Pokemon sprite`"
-                class="pokemon-img"
-                loading="lazy"
-            />
+                ref="frontImageRef"
+                class="pokemon-img-button"
+                type="button"
+                :aria-label="t('accessibility.pokemonImageFront', { name: capitalize(pokemon.name) })"
+                @keydown="handleImageNavigation"
+            >
+                <img
+                    :src="pokemon.sprites.front_default"
+                    alt=""
+                    class="pokemon-img"
+                    loading="lazy"
+                    aria-hidden="true"
+                />
+            </button>
             <p v-else class="no-image" role="status" aria-live="polite">
-                No front image available for {{ capitalize(pokemon.name) }}
+                {{ t('viewFinder.noFrontImage', { name: capitalize(pokemon.name) }) }}
             </p>
         </div>
 
         <div class="image-container">
-            <h3>Back View</h3>
-            <img
+            <h3>{{ t('viewFinder.backViewLabel') }}</h3>
+            <button
                 v-if="pokemon.sprites?.back_default"
-                :src="pokemon.sprites.back_default"
-                :alt="`${capitalize(pokemon.name)} - back facing Pokemon sprite`"
-                class="pokemon-img"
-                loading="lazy"
-            />
+                ref="backImageRef"
+                class="pokemon-img-button"
+                type="button"
+                :aria-label="t('accessibility.pokemonImageBack', { name: capitalize(pokemon.name) })"
+                @keydown="handleImageNavigation"
+            >
+                <img
+                    :src="pokemon.sprites.back_default"
+                    alt=""
+                    class="pokemon-img"
+                    loading="lazy"
+                    aria-hidden="true"
+                />
+            </button>
             <p v-else class="no-image" role="status" aria-live="polite">
-                No back image available for {{ capitalize(pokemon.name) }}
+                {{ t('viewFinder.noBackImage', { name: capitalize(pokemon.name) }) }}
             </p>
         </div>
     </div>
@@ -71,11 +108,27 @@ defineProps({
     padding: $spacing-md;
     border: 2px solid $secondary;
     transition: all $transition-normal;
+    display: block;
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.pokemon-img-button {
+    background: none;
+    border: none;
+    padding: 0;
     cursor: pointer;
+    border-radius: $radius-md;
+    transition: all $transition-normal;
+    position: relative;
 
     &:hover {
-        box-shadow: 0 0 0 3px $secondary;
-        transform: scale(1.05);
+        .pokemon-img {
+            box-shadow: 0 0 0 3px $secondary;
+            transform: scale(1.05);
+        }
     }
 
     &:focus {
@@ -83,10 +136,16 @@ defineProps({
         outline-offset: $focus-outline-offset;
     }
 
+    &:focus-visible {
+        outline: 3px solid $secondary;
+        outline-offset: 4px;
+        box-shadow: 0 0 0 6px rgba($secondary, 0.15);
+    }
+
     @media (prefers-reduced-motion: reduce) {
         transition: none;
 
-        &:hover {
+        &:hover .pokemon-img {
             transform: none;
         }
     }
