@@ -7,8 +7,6 @@ const { t } = useI18n();
 </script>
 
 <template>
-    <!-- Skip to main content link - visible for screen readers, shown on focus -->
-    <a href="#main-content" class="skip-to-main">{{ t('common.skipToMainContent') }}</a>
     <RouterView />
 </template>
 

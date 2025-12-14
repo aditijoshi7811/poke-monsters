@@ -64,7 +64,7 @@
     "pokedex": {
       "title": "My Pokédex",
       "sortLabel": "Sort options",
-      "filterLabel": "Filter by type, {count} types selected",
+      "filterLabel": "Filter by type({count})",
       "filterLabelNoTypes": "Filter by type",
       "closeButton": "Close modal",
       "sortByIdLabel": "Sort by Id, current order: {order}, press Enter to sort",

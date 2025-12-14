@@ -103,7 +103,7 @@ const cancelQuit = () => {
 </script>
 
 <template>
-    <main id="main-content" class="capture-view">
+    <main  class="capture-view">
         <header class="capture-header">
             <h1>{{ t('capture.headerTitle', { name: trainerStore.trainerName }) }}</h1>
         </header>

@@ -156,7 +156,6 @@ const startGame = async () => {
 
 <template>
     <main
-        id="main-content"
         role="main"
         class="home-view"
         :class="{ 'is-transitioning': isTransitioning }"

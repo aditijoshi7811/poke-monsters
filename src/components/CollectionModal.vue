@@ -298,7 +298,7 @@ const allTypes = computed(() => {
                                     />
                                 </svg>
                             </span>
-                            {{ t('modals.pokedex.filterLabel', { count: selectedTypes.size }) }}
+                            {{ selectedTypes.size > 0 ? t('modals.pokedex.filterLabel', { count: selectedTypes.size }) : t('modals.pokedex.filterLabelNoTypes') }}
                         </button>
                         <button
                             type="button"
