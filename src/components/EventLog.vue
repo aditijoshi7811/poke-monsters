@@ -49,7 +49,7 @@ watch(
 </script>
 
 <template>
-    <div class="event-log">
+    <div class="event-log" role="region" aria-label="Event log and game notifications">
         <div v-if="eventListText" class="event-message">
             {{ eventListText }}
         </div>

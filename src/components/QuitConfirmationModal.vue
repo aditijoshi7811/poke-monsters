@@ -1,5 +1,7 @@
 <script setup>
-defineProps({
+import { useModalEscapeKey } from '@/composables/useModalEscapeKey';
+
+const props = defineProps({
     isOpen: {
         type: Boolean,
         required: true
@@ -23,11 +25,18 @@ const handleConfirm = () => {
 const handleCancel = () => {
     emit('cancel');
 };
+
+// Use composable for Escape key modal functionality
+useModalEscapeKey(
+    () => props.isOpen,
+    handleCancel,
+    '.quit-modal'
+);
 </script>
 
 <template>
     <div v-if="isOpen" class="modal-overlay" @click="handleCancel">
-        <div class="quit-modal" @click.stop>
+        <div class="quit-modal" @click.stop tabindex="-1">
             <h2>Are you sure?</h2>
             <p>Do you want to quit the game and return to the title screen?</p>
             <div class="modal-actions">

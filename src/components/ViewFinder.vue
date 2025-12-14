@@ -50,7 +50,11 @@ const encounterStats = computed(() => {
 </script>
 
 <template>
-    <div class="pokemon-display">
+    <div
+        class="pokemon-display"
+        role="region"
+        aria-label="Pokemon encounter display"
+    >
         <div
             v-if="displayPokemon"
             :class="['pokemon-container', { 'animate-out': isAnimatingOut }]"

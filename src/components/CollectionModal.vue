@@ -1,11 +1,12 @@
 <script setup>
 import { useTrainerStore } from '@/stores/trainerStore';
-import { computed, ref } from 'vue';
+import { computed, ref, watch, onUnmounted } from 'vue';
 import { capitalize } from '@/composables/useStringUtils';
 import { useSortable } from '@/composables/useSortable';
 import { useFilterable } from '@/composables/useFilterable';
+import { useModalEscapeKey } from '@/composables/useModalEscapeKey';
 
-defineProps({
+const props = defineProps({
     isOpen: {
         type: Boolean,
         required: true
@@ -168,6 +169,13 @@ const closeModal = () => {
     emit('close');
 };
 
+// Use composable for Escape key modal functionality
+useModalEscapeKey(
+    () => props.isOpen,
+    closeModal,
+    '.modal-content'
+);
+
 /**
  * Computes the total number of caught Pokémon.
  * @return {number} The total count of caught Pokémon.
@@ -213,6 +221,7 @@ const allTypes = computed(() => {
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="pokedexTitle"
+                tabindex="-1"
                 @click.stop
             >
                 <div class="modal-header">
