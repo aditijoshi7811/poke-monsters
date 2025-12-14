@@ -103,9 +103,13 @@ const cancelQuit = () => {
 </script>
 
 <template>
-    <main  class="capture-view">
+    <main class="capture-view">
         <header class="capture-header">
-            <h1>{{ t('capture.headerTitle', { name: trainerStore.trainerName }) }}</h1>
+            <h1>
+                {{
+                    t('capture.headerTitle', { name: trainerStore.trainerName })
+                }}
+            </h1>
         </header>
 
         <section class="capture-content">
@@ -122,7 +126,11 @@ const cancelQuit = () => {
         <div v-if="showCatchSuccess" class="catch-success-overlay">
             <div class="catch-success-animation">
                 <div class="success-icon">✨</div>
-                <div class="success-text">{{ t('capture.caughtMessage', { name: caughtPokemonName }) }}</div>
+                <div class="success-text">
+                    {{
+                        t('capture.caughtMessage', { name: caughtPokemonName })
+                    }}
+                </div>
                 <div class="success-sparkles">
                     <span class="sparkle"></span>
                     <span class="sparkle"></span>

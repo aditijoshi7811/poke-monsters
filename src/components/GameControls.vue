@@ -52,7 +52,11 @@ const handleFind = async () => {
             pokemonStore.selectedGeneration
         );
         if (pokemon)
-            pokemonStore.addEvent(t('gameEvents.pokemonAppeared', { name: capitalize(pokemon.name) }));
+            pokemonStore.addEvent(
+                t('gameEvents.pokemonAppeared', {
+                    name: capitalize(pokemon.name)
+                })
+            );
         isFindingPokemon.value = false;
     } catch (err) {
         pokemonStore.addEvent(t('gameEvents.randomError'));
@@ -81,9 +85,9 @@ const handleThrow = async () => {
     if (!currentPokemon) return;
 
     pokemonStore.addEvent(
-        t('gameEvents.throwBall', { 
-            trainerName: trainerStore.trainerName, 
-            pokemonName: capitalize(currentPokemon.name) 
+        t('gameEvents.throwBall', {
+            trainerName: trainerStore.trainerName,
+            pokemonName: capitalize(currentPokemon.name)
         })
     );
     await attemptThrow();
@@ -103,7 +107,11 @@ const quitGame = () => emit('quit-game');
                 @click="handleFind"
                 :disabled="hasPokemon"
                 :aria-busy="fetchLoading"
-                :aria-label="fetchLoading ? t('controls.findButtonLoading') : t('controls.findButton')"
+                :aria-label="
+                    fetchLoading
+                        ? t('controls.findButtonLoading')
+                        : t('controls.findButton')
+                "
             >
                 Find
             </button>
@@ -130,14 +138,19 @@ const quitGame = () => emit('quit-game');
                 type="button"
                 name="btn-collection"
                 @click.prevent="showCollectionView"
-                :aria-label="t('controls.pokedexButton', { count: uniqueCount })"
+                :aria-label="
+                    t('controls.pokedexButton', { count: uniqueCount })
+                "
             >
-                Pokedex <span class="pokedex-badge" aria-hidden="true">{{ t('controls.pokedexBadge', { count: uniqueCount }) }}</span>
+                Pokedex
+                <span class="pokedex-badge" aria-hidden="true">{{
+                    t('controls.pokedexBadge', { count: uniqueCount })
+                }}</span>
             </button>
 
-            <button 
-                type="button" 
-                name="btn-quit" 
+            <button
+                type="button"
+                name="btn-quit"
                 @click.prevent="quitGame"
                 :aria-label="t('controls.quitButton')"
             >

@@ -20,10 +20,13 @@ const encounterStatsRef = ref(null);
  * Also handles arrow keys for vertical navigation
  */
 const handleSectionNavigation = (e) => {
-    const sections = [pokemonImagesRef.value, encounterStatsRef.value].filter(Boolean);
+    const sections = [pokemonImagesRef.value, encounterStatsRef.value].filter(
+        Boolean
+    );
     const currentFocused = document.activeElement;
     const currentIndex = sections.findIndex(
-        (section) => section === currentFocused || section?.contains(currentFocused)
+        (section) =>
+            section === currentFocused || section?.contains(currentFocused)
     );
 
     if (e.key === 'Tab') {

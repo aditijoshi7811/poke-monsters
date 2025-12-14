@@ -162,11 +162,20 @@ const startGame = async () => {
     >
         <div class="container">
             <h1>
-                {{ t(isTransitioning ? 'capture.headerTitle' : 'home.welcomeTitleDefault', { name: isTransitioning ? inputTrainerName : 'Trainer' }) }}
+                {{
+                    t(
+                        isTransitioning
+                            ? 'capture.headerTitle'
+                            : 'home.welcomeTitleDefault',
+                        { name: isTransitioning ? inputTrainerName : 'Trainer' }
+                    )
+                }}
             </h1>
 
             <form id="form-registration" @submit.prevent="submit">
-                <label for="trainer-name">{{ t('home.trainerNameLabel') }}</label>
+                <label for="trainer-name">{{
+                    t('home.trainerNameLabel')
+                }}</label>
                 <input
                     ref="inputRef"
                     type="text"
@@ -181,7 +190,9 @@ const startGame = async () => {
                     @input="handleInputInteraction"
                 />
 
-                <label for="generation-select">{{ t('home.generationSelectLabel') }}</label>
+                <label for="generation-select">{{
+                    t('home.generationSelectLabel')
+                }}</label>
                 <select
                     ref="selectRef"
                     v-model.number="pokemonStore.selectedGeneration"
@@ -199,7 +210,9 @@ const startGame = async () => {
                         {{ g.label }}
                     </option>
                 </select>
-                <p id="generation-help" class="sr-only">{{ t('home.generationSelectHelpText') }}</p>
+                <p id="generation-help" class="sr-only">
+                    {{ t('home.generationSelectHelpText') }}
+                </p>
 
                 <p
                     v-if="shouldShowError"
@@ -216,7 +229,11 @@ const startGame = async () => {
                     @click="startGame"
                     :disabled="isButtonDisabled"
                     :aria-disabled="isButtonDisabled"
-                    :aria-label="isButtonDisabled ? t('home.startButtonDisabledLabel') : t('home.startButtonLabel')"
+                    :aria-label="
+                        isButtonDisabled
+                            ? t('home.startButtonDisabledLabel')
+                            : t('home.startButtonLabel')
+                    "
                 >
                     {{ t('home.startButtonText') }}
                 </button>

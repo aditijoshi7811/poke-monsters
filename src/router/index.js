@@ -14,10 +14,6 @@ const router = createRouter({
             path: '/capture',
             name: 'capture',
             component: CaptureView
-        },
-        {
-            path: '/collection',
-            name: 'collection'
         }
     ]
 });

@@ -30,7 +30,9 @@ export function usePokemonCatchMechanic(
                 // Success
                 trainerStore.addCaughtPokemon(current);
                 pokemonStore.addEvent(
-                    t('gameEvents.catchSuccess', { name: capitalize(current.name) })
+                    t('gameEvents.catchSuccess', {
+                        name: capitalize(current.name)
+                    })
                 );
                 emitFn('catch-success', capitalize(current.name));
                 pokemonStore.currentPokemon = null;
@@ -39,12 +41,16 @@ export function usePokemonCatchMechanic(
                 // Failure
                 failureCount.value++;
                 pokemonStore.addEvent(
-                    t('gameEvents.catchFailure', { name: capitalize(current.name) })
+                    t('gameEvents.catchFailure', {
+                        name: capitalize(current.name)
+                    })
                 );
 
                 if (failureCount.value >= 2) {
                     pokemonStore.addEvent(
-                        t('gameEvents.pokemonRanAway', { name: capitalize(current.name) })
+                        t('gameEvents.pokemonRanAway', {
+                            name: capitalize(current.name)
+                        })
                     );
                     pokemonStore.currentPokemon = null;
                     failureCount.value = 0;

@@ -1,6 +1,6 @@
 <script setup>
 import { usePokemonStore } from '@/stores/pokemonStore';
-import { computed, ref, watch, nextTick } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useTrainerStore } from '@/stores/trainerStore';
 
@@ -21,15 +21,6 @@ const eventListText = computed(() => {
     }
     return null;
 });
-
-/**
- * Scroll focused event into view
- */
-const scrollIntoView = () => {
-    if (focusedEventIndex.value !== null && eventItemsRef.value[focusedEventIndex.value]) {
-        eventItemsRef.value[focusedEventIndex.value].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-};
 
 /**
  * Handle event item click
@@ -76,10 +67,10 @@ watch(
 </script>
 
 <template>
-    <section 
+    <section
         ref="eventLogRef"
-        class="event-log" 
-        role="region" 
+        class="event-log"
+        role="region"
         :aria-label="t('eventLog.regionLabel') || 'Event Log'"
         :aria-live="focusedEventIndex !== null ? 'off' : 'polite'"
         tabindex="0"
@@ -90,7 +81,11 @@ watch(
             role="status"
             aria-live="assertive"
             aria-atomic="true"
-            :aria-label="focusedEventIndex !== null ? `Event ${focusedEventIndex + 1} of ${pokemonStore.events.length}` : ''"
+            :aria-label="
+                focusedEventIndex !== null
+                    ? `Event ${focusedEventIndex + 1} of ${pokemonStore.events.length}`
+                    : ''
+            "
         >
             {{ announcementText }}
         </div>
@@ -105,9 +100,13 @@ watch(
             <li
                 v-for="(event, index) in pokemonStore.events"
                 :key="event.id"
-                :ref="el => { if (el) eventItemsRef[index] = el }"
+                :ref="
+                    (el) => {
+                        if (el) eventItemsRef[index] = el;
+                    }
+                "
                 class="event-item"
-                :class="{ 
+                :class="{
                     'latest-event': index === 0,
                     'focused-event': focusedEventIndex === index
                 }"
@@ -122,8 +121,18 @@ watch(
                     {{ event.timestamp }}
                 </time>
                 <div class="event-content">
-                    <span v-if="index === 0" class="event-text typing" aria-live="off">
-                        {{ displayedText }}<span v-if="isTyping" class="typing-cursor" aria-hidden="true">|</span>
+                    <span
+                        v-if="index === 0"
+                        class="event-text typing"
+                        aria-live="off"
+                    >
+                        {{ displayedText
+                        }}<span
+                            v-if="isTyping"
+                            class="typing-cursor"
+                            aria-hidden="true"
+                            >|</span
+                        >
                     </span>
                     <span v-else class="event-text">{{ event.message }}</span>
                 </div>
@@ -159,7 +168,9 @@ watch(
     box-shadow: $shadow-md;
     outline: 2px solid transparent;
     outline-offset: 2px;
-    transition: outline 0.2s ease, box-shadow 0.2s ease;
+    transition:
+        outline 0.2s ease,
+        box-shadow 0.2s ease;
 
     &:focus {
         outline: 2px solid $secondary;
@@ -167,7 +178,9 @@ watch(
 
     &:focus-visible {
         outline: 3px solid $secondary;
-        box-shadow: $shadow-md, 0 0 0 4px rgba($secondary, 0.15);
+        box-shadow:
+            $shadow-md,
+            0 0 0 4px rgba($secondary, 0.15);
     }
 }
 

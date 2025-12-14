@@ -38,7 +38,11 @@ defineProps({
                 ref="frontImageRef"
                 class="pokemon-img-button"
                 type="button"
-                :aria-label="t('accessibility.pokemonImageFront', { name: capitalize(pokemon.name) })"
+                :aria-label="
+                    t('accessibility.pokemonImageFront', {
+                        name: capitalize(pokemon.name)
+                    })
+                "
                 @keydown="handleImageNavigation"
             >
                 <img
@@ -50,7 +54,11 @@ defineProps({
                 />
             </button>
             <p v-else class="no-image" role="status" aria-live="polite">
-                {{ t('viewFinder.noFrontImage', { name: capitalize(pokemon.name) }) }}
+                {{
+                    t('viewFinder.noFrontImage', {
+                        name: capitalize(pokemon.name)
+                    })
+                }}
             </p>
         </div>
 
@@ -61,7 +69,11 @@ defineProps({
                 ref="backImageRef"
                 class="pokemon-img-button"
                 type="button"
-                :aria-label="t('accessibility.pokemonImageBack', { name: capitalize(pokemon.name) })"
+                :aria-label="
+                    t('accessibility.pokemonImageBack', {
+                        name: capitalize(pokemon.name)
+                    })
+                "
                 @keydown="handleImageNavigation"
             >
                 <img
@@ -73,7 +85,11 @@ defineProps({
                 />
             </button>
             <p v-else class="no-image" role="status" aria-live="polite">
-                {{ t('viewFinder.noBackImage', { name: capitalize(pokemon.name) }) }}
+                {{
+                    t('viewFinder.noBackImage', {
+                        name: capitalize(pokemon.name)
+                    })
+                }}
             </p>
         </div>
     </div>

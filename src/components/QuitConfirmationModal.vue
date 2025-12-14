@@ -30,11 +30,7 @@ const handleCancel = () => {
 };
 
 // Use composable for Escape key modal functionality
-useModalEscapeKey(
-    () => props.isOpen,
-    handleCancel,
-    '.quit-modal'
-);
+useModalEscapeKey(() => props.isOpen, handleCancel, '.quit-modal');
 </script>
 
 <template>

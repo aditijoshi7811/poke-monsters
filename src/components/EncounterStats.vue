@@ -35,23 +35,25 @@ const handleTableNavigation = (e) => {
 
 <template>
     <div class="pokemon-stats">
-        <table 
+        <table
             ref="tableRef"
-            class="stats-table" 
+            class="stats-table"
             v-if="props.stats && props.stats.length"
             role="grid"
             :aria-label="t('viewFinder.statsLabel')"
         >
             <thead class="sr-only">
                 <tr>
-                    <th scope="col">{{ t('accessibility.filterPanelAriaLabel') }}</th>
+                    <th scope="col">
+                        {{ t('accessibility.filterPanelAriaLabel') }}
+                    </th>
                     <th scope="col">Value</th>
                 </tr>
             </thead>
             <tbody>
-                <tr 
-                    v-for="(stat, index) in props.stats" 
-                    :key="stat.label" 
+                <tr
+                    v-for="(stat, index) in props.stats"
+                    :key="stat.label"
                     :data-stat="stat.label.toLowerCase()"
                     tabindex="0"
                     role="row"
@@ -59,7 +61,9 @@ const handleTableNavigation = (e) => {
                     @keydown="handleTableNavigation"
                 >
                     <th scope="row" class="label">{{ stat.label }}</th>
-                    <td class="value" :data-label="stat.label">{{ stat.value }}</td>
+                    <td class="value" :data-label="stat.label">
+                        {{ stat.value }}
+                    </td>
                 </tr>
             </tbody>
         </table>
